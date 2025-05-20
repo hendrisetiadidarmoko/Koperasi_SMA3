@@ -36,7 +36,7 @@ class Index extends Component
 
     public function closeModal()
     {
-        $this->reset();
+        $this->resetExcept('items');
         $this->resetErrorBag();
         $this->dispatch('close-modal');
     }

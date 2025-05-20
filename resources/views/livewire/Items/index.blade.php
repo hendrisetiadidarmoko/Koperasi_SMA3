@@ -1,5 +1,5 @@
-<div class="container" data-aos="fade-left">
-    <div class="page-heading my-5">
+<div class="container" >
+    <div class="page-heading my-5" data-aos="fade-left">
         <div class="page-title">
             <div class="row">
                 <div class="order-md-1 order-last">
@@ -13,7 +13,7 @@
                     <div class="card border-0">
                         <div class="card-body">
                             <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-create mb-3" data-bs-toggle="modal" data-bs-target="#form-modal">
+                                <button type="button" class="btn btn-create mb-3" data-bs-toggle="modal" data-bs-target="#form-modal" >
                                     Tambah Data
                                 </button>
                             </div>
@@ -32,7 +32,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade {{ $modalId }}" id="form-modal" tabindex="-1" aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
+    <div  class="modal fade {{ $modalId }}" id="form-modal" tabindex="-1" aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
