@@ -7,7 +7,7 @@
     </div>
 
     <div class="my-3">
-        <div class="row">
+        <div class="row" data-aos="fade-left">
             <div class="col-12 col-xl-3 col-md-6 col-sm-12 my-2">
                 <div class="card content-dashboard">
                     <div class="card-body text-center">
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="card mt-3 h-100">
+        <div class="card mt-3 h-100" data-aos="fade-left">
             <div class="card-header content-dashboard-chart">
                 <h3 class="mb-0">Stok Barang</h3>
             </div>
@@ -49,7 +49,7 @@
                 <canvas id="stockChart" class="w-100 h-100"></canvas>
             </div>
         </div>
-        <div class="row">
+        <div class="row" data-aos="fade-left">
             <div class="col-12 col-xl-8 col-md-12 my-3">
                 <div class="card mt-3 h-100">
                     <div class="card-header content-dashboard-chart">

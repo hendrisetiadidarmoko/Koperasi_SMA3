@@ -1,7 +1,7 @@
 <div>
-    <section class="hero container">
+    <section class="hero container " >
         <div class="row align-items-center">
-            <div class="col-md-6 order-2 order-md-1">
+            <div class="col-md-6 order-2 order-md-1" data-aos="fade-right">
                 <div class="hero-text text-center text-md-start">
                     <h2 class="fw-bold">Koperasi <br> 
                         <span style="color: #FFA500;" class="fs-1">SMA N 3 Purwokerto</span>
@@ -10,12 +10,12 @@
                     <a href="#" class="btn btn-custom">Selengkapnya</a>
                 </div>
             </div>
-            <div class="col-md-6 text-center order-1 order-md-2">
+            <div class="col-md-6 text-center order-1 order-md-2" data-aos="fade-left">
                 <img src="{{ asset('assets/images/hero-image3.png') }}" alt="Koperasi Image" class="img-fluid">
             </div>
         </div>
     </section>
-    <section class="container my-5">
+    <section class="container my-5" data-aos="zoom-in-down">
         <h2 class="text-center fw-bold text-custom mb-4 ">Tentang</h2>
         <div class="row align-items-center">
             <div class="col-md-4 text-center">
@@ -29,7 +29,7 @@
             </div>
         </div>
     </section>
-    <section class="container-md">
+    <section class="container-md" data-aos="zoom-in-down">
         <h2 class="text-center fw-bold text-custom mb-4">Keunggulan</h2>
         <div class="row gap-3 justify-content-center">
             <!-- Harga Terjangkau -->
@@ -61,7 +61,7 @@
         </div>
     </section>
 
-    <section class="container my-5 px-3">
+    <section class="container my-5 px-3" data-aos="zoom-in-down">
         <h3 class="text-center mb-4 text-custom">Lokasi dan Kontak </h3>
         <div class="row">
             <div class="col-md-8 col-sm-12 map my-3">

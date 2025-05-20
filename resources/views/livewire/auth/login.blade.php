@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" data-aos="zoom-in-down">
     <div class="row justify-content-center align-content-center vh-100">
         <div class="col-xl-4 col-md-6 col-sm-8">
             <div class="card rounded-4 p-3">

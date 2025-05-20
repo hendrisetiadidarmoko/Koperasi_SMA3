@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" data-aos="fade-left">
     <div class="w-100 border-content rounded my-5 bg-light">
         <div class="page-heading mt-5">
             <div class="page-title">

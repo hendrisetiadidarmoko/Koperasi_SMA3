@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" data-aos="fade-left">
     <div class="page-heading my-5">
         <div class="page-title">
             <div class="row">
