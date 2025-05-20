@@ -1,0 +1,7 @@
+@import "./abstract/index.css";
+@import "./components/sidebar.css";
+@import "./components/table.css";
+@import "./components/auth.css";
+@import "./components/profile.css";
+@import "./components/content.css";
+@import "./components/navbar.css";

@@ -1,0 +1,56 @@
+.navbar{
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #FFA500;
+    z-index: 10001;
+
+}
+
+.navbar a
+{
+    color: #FFA500;
+}
+
+.navbar-toggler, 
+.navbar-toggler-icon {
+    color: #FFA500;
+    filter: invert(51%) sepia(98%) saturate(720%) hue-rotate(1deg) brightness(102%) contrast(103%);
+}
+
+.nav-link:hover,
+.nav-link:visited,
+.nav-link:focus,
+.nav-link:active,
+.nav-link:disabled{
+    color: #FFA500;
+}
+
+.btn-outline-login, 
+.btn-outline-login:hover,
+.btn-outline-login:focus,
+.btn-outline-login:active,
+.btn-outline-login.active,
+.btn-outline-login:visited,
+.btn-outline-login:disabled
+{
+    border: 1px solid #FFA500 !important;
+    color: #FFA500 !important;
+    background-color: #FFFFFF !important;
+}
+
+.btn-register,
+.btn-register:hover,
+.btn-register:focus,
+.btn-register:active,
+.btn-register.active,
+.btn-register:visited,
+.btn-register:disabled
+{
+    border: none;
+    color: #FFFFFF !important; 
+    background-color: #FFA500 !important;
+}
+
+.navbar-brand img{
+    height: 50px;
+    width: 120px;
+}

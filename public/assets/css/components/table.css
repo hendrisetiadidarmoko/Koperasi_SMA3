@@ -1,0 +1,69 @@
+/* resources/css/livewire-tables.css */
+
+.laravel-livewire-table {
+    /* Custom styles for the table */
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.laravel-livewire-tables th {
+    /* Custom styles for the table header */
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+
+
+.laravel-livewire-tables td {
+    /* Custom styles for the table cells */
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+
+}
+
+
+.laravel-livewire-tables-cursor{
+    justify-content: center;
+}
+
+.table{
+    --bs-table-bg: none;
+}
+
+[wire\:key="table-thead"],
+[wire\:key="table-tbody"]
+ {
+    text-align: center;
+}
+
+[wire\:key="table-thead"]{
+    background-color: #FFA500;;
+    color: #FFFFFF;
+}
+
+table.dataTable td{padding:15px 8px}
+
+.actions-table{
+    justify-content: space-evenly;
+}
+
+.btn-create,
+.btn-create:hover,
+.btn-create:focus,
+.btn-create:active,
+.btn-create.active,
+.btn-create:visited,
+.btn-create:disabled {
+    background-color: #FFA500 !important;
+    color: #FFFFFF !important;
+    font-weight: 600;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
