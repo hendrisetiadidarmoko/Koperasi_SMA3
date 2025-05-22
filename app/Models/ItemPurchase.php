@@ -12,7 +12,7 @@ class ItemPurchase extends Model
     use HasFactory;
 
     protected $table = 'items_purchase';
-    protected $fillable = ['id_item', 'price', 'count','user_id', 'created_at'];
+    protected $fillable = ['id_item', 'price', 'count','user_id'];
 
     
 

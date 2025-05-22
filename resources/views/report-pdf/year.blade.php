@@ -51,7 +51,7 @@
                                     <td>{{ number_format($item->price ?? 0, 0, '.', ',') }}</td>
                                     <td>{{ number_format($item->previous_stock_total ?? 0, 0, '.', ',') }}</td> 
                                     <td>{{$item->total_buy}}</td>
-                                    <td>{{ $item->price_buy ?? 0, 0, '.', ',' }}</td> 
+                                    <td>{{ $item->price_buy ?? 0, 0, '.', ',' }}</td>
                                     <td>{{ number_format($item->price_total ?? 0, 0, '.', ',') }}</td> 
                                     <td>{{$item->total_item}}</td>
                                     <td>{{ $item->price_item ?? 0, 0, '.', ','}}</td>

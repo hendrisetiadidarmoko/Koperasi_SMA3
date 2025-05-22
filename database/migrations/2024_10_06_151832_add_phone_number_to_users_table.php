@@ -12,7 +12,7 @@ class AddPhoneNumberToUsersTable extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('phone_number')->nullable(); 
+            $table->string('phone_number', 15)->nullable();
         });
     }
 
@@ -22,7 +22,7 @@ class AddPhoneNumberToUsersTable extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('phone_number'); 
+            $table->dropColumn('phone_number');
         });
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class Index extends Component
 {
     public $modalId = 'items_modal';
-    public $name, $price;
+    public $name, $price, $price_buy;
     public $itemId = null;
     
 
@@ -41,8 +41,15 @@ class Index extends Component
         $validated = $this->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'price_buy' => 'required|numeric|min:0',
         ]);
-        
+
+        if ($validated['price_buy'] >= $validated['price']) {
+            Session()->flash('message', 'Barang pembelian harus lebih randah dari harga penjualan');
+            $this->dispatch('re_render_table');
+            $this->closeModal();
+            return;
+        }
 
         if ($this->itemId) {
             // Update existing Barang
@@ -70,6 +77,7 @@ class Index extends Component
             $this->itemId = $item->id; 
             $this->name = $item->name; 
             $this->price =  $this->price = number_format($item->price, 0, ',', '.');
+            $this->price_buy =  $this->price_buy = number_format($item->price_buy, 0, ',', '.');
             $this->dispatch('show-modal'); 
         }
     }

@@ -17,16 +17,9 @@
                         <tr>
                             <th>ID</th>
                             <th>Nama Barang</th>
-                            <th>Jumlah Penjualan</th>
-                            <th>Harga Penjualan</th>
-                            <th>Total Harga Penjualan</th>
-                            <th>Jumlah R/L</th>
-                            <th>Beli R/L</th>
-                            <th>Jual R/L</th>
-                            <th>Total R/L</th>
-                            <th>Sisa Barang Akhir Bulan</th>
-                            <th>Harga Barang</th>
-                            <th>Total Harga Barang Sisa</th>
+                            <th>Jumlah Persediaan Awal</th>
+                            <th>Harga Persediaan Awal</th>
+                            <th>Total Persediaan Awal</th>
                         </tr>
                     </thead>
                     <tbody class="table-light border-dark">
@@ -43,17 +36,10 @@
                         @forelse ($items[$month] as $item)
                             <tr>
                                 <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{$item->total_sell}}</td>
-                                    <td>{{ $item->price_sell ?? 0, 0, '.', ','}}</td>
-                                    <td>{{ number_format($item->price_total_sell ?? 0, 0, '.', ',') }}</td>
-                                    <td>{{$item->total_RL}}</td>
-                                    <td>{{ number_format($item->price_buy_Rl ?? 0, 0, '.', ',') }}</td>
-                                    <td>{{ number_format($item->price_sell_RL ?? 0, 0, '.', ',') }}</td>
-                                    <td>{{ number_format($item->price_total_RL ?? 0, 0, '.', ',') }}</td>
-                                    <td>{{$item->total_remaining_stock}}</td>
-                                    <td>{{ number_format($item->price ?? 0, 0, '.', ',') }}</td>
-                                    <td>{{ number_format($item->price_total_remaining_stock ?? 0, 0, '.', ',') }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>{{ $item->previous_stock }}</td> 
+                                <td>{{ $item->previous_price ?? 0, 0, '.', ',' }}</td> 
+                                <td>{{ number_format($item->previous_stock_total ?? 0, 0, '.', ',') }}</td> 
                                 
                             </tr>
                         @empty
@@ -82,11 +68,7 @@
                                         
                                     @endphp
                                 @endforeach
-                                <td  class="text-end">{{ number_format($totalSellItem ?? 0, 0, '.', ',') }}</td>
-                                <td colspan="2" class="text-end">{{ number_format($totalBuyRL ?? 0, 0, '.', ',') }}</td>
-                                <td  class="text-end">{{ number_format($totalSellRL ?? 0, 0, '.', ',') }}</td>
-                                <td  class="text-end">{{ number_format($totalRL ?? 0, 0, '.', ',') }}</td>
-                                <td colspan="3" class="text-end">{{ number_format($totalRemainingStock ?? 0, 0, '.', ',') }}</td>
+                                <td><strong>{{ number_format($totalPreviousStock, 0, '.', ',') }}</strong></td>
                             </tr>
                         </tfoot>
                     @endif
@@ -202,7 +184,7 @@
                                     <td>{{ number_format($item->price_sell_RL ?? 0, 0, '.', ',') }}</td>
                                     <td>{{ number_format($item->price_total_RL ?? 0, 0, '.', ',') }}</td>
                                     <td>{{$item->total_remaining_stock}}</td>
-                                    <td>{{ number_format($item->price ?? 0, 0, '.', ',') }}</td>
+                                    <td>{{ $item->total_remaining_price_stock ?? 0, 0, '.', ',' }}</td>
                                     <td>{{ number_format($item->price_total_remaining_stock ?? 0, 0, '.', ',') }}</td>
                                 
                             </tr>

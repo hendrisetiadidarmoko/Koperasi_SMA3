@@ -23,8 +23,8 @@ class Register extends Component
 
         // Validasi semua field termasuk nomor telepon dan konfirmasi password
         $validated = $this->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'name' => 'required|max:50',
+            'email' => 'required|email|unique:users,email|max:50',
             'password' => 'required|min:8|max:20|confirmed',
         ]);
 

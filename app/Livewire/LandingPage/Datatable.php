@@ -2,27 +2,18 @@
 
 namespace App\Livewire\LandingPage;
 
-use App\Models\ItemPurchase;
+use App\Models\Item;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class Datatable extends DataTableComponent
 {
-    protected $model = ItemPurchase::class;
+    protected $model = Item::class;
 
     protected $listeners = [
         're_render_table' => '$refresh'
     ];
 
-    public function delete($id)
-    {
-        $this->dispatch('delete', $id); 
-    }
-
-    public function edit($id)
-    {
-        $this->dispatch('edit', $id); 
-    }
 
     public function configure(): void
     {
@@ -37,13 +28,13 @@ class Datatable extends DataTableComponent
         return [
             Column::make('ID', 'id')
                 ->sortable(),
-            Column::make('Nama', 'item.name')
+            Column::make('Nama', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Harga', 'price')
+            Column::make('Harga Penjualan', 'price')
                 ->sortable()
                 ->format(function ($value) {
-                    return number_format($value, 0, '.', '');
+                    return number_format($value ?? 0, 0, '.', ',');
                 }),
             Column::make('Jumlah', 'count')
                 ->sortable(),

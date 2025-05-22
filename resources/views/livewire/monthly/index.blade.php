@@ -9,10 +9,10 @@
                 </div>
             </div>
         </div>
-        <section class="section mt-4 p-3">
+        <section class="section mt-4 p-3 ">
             @foreach ($monthsForYear as $month)
                 <a href="{{ route('admin.report.monthly', ['year' => $year, 'month' => $month]) }}"
-                    class="fs-5 d-block rounded text-light p-2 link-content">
+                    class="fs-5 d-block rounded text-light p-2 link-content my-3">
                     Tahun <span>{{ $month }}
                 </a>
             @endforeach

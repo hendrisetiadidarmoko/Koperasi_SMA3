@@ -1,5 +1,5 @@
-<div class="container" >
-    <div class="page-heading my-5" data-aos="fade-left">
+<div class="container">
+    <div class="page-heading my-5">
         <div class="page-title">
             <div class="row">
                 <div class="order-md-1 order-last">
@@ -7,6 +7,7 @@
                 </div>
             </div>
         </div>
+
         <section class="section mt-3">
             <div class="row">
                 <div class="col-12">
@@ -18,21 +19,17 @@
                                 </button>
                             </div>
                             <div>
-                                <x-alert.notification/>
-                                <livewire:itemsSell.datatable />
+                                <x-alert.notification />
+                                <livewire:items-sell.datatable />
                             </div>
                         </div>
-                        
-                        
                     </div>
                 </div>
             </div>
         </section>
-        
     </div>
-
-    <!-- Modal -->
-    <div class="modal fade {{ $modalId }}" id="form-modal" tabindex="-1" aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
+    <!-- Modal Form -->
+    <div class="modal fade {{ $modalId }}" id="form-modal" tabindex="-1" aria-labelledby="{{ $modalId }}Label" aria-hidden="true" wire:ignore>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -41,35 +38,32 @@
                 </div>
                 <form wire:submit.prevent="save">
                     <div class="modal-body">
-                        <div class="mb-3">
+                        <div class="mb-3" >
                             <label for="item">Nama Barang :</label>
-                            <select wire:model="id_item" class="form-control" id="item" required>
+                            <select wire:model="id_item" class="form-control" id="item" required onchange="updatePrice()" wire:ignore>
                                 <option value="">-- Pilih Barang --</option>
                                 @foreach($items as $item)
-                                    <option value="{{ $item->id }}" {{ $item->id == $id_item ? 'selected' : '' }}>{{ $item->name }}</option>
+                                <option value="{{ $item->id }}" data-price="{{ $item->price }}" {{ $item->id == $id_item ? 'selected' : '' }}>
+                                    {{ $item->name }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('id_item') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         
-                        <div class="mb-3">
-                            <label for="harga">Harga Barang :</label>
-                            <input type="number" value="{{ $price }}" wire:model="price" class="form-control" id="harga" required min="0" step="0.01" readonly style="background-color: #f8f9fa; opacity: 0.65;">
+                        
+                        <div class="mb-3" >
+                            <label for="harga">Harga Barang:</label>
+                            <input type="number"  wire:model="price" class="form-control" id="harga" value="{{$price}}" required min="0" step="0.01" readonly style="background-color: #f8f9fa; opacity: 0.65;">
                             @error('price') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
-                        
-                        
                 
                         <div class="mb-3">
                             <label for="count">Jumlah Barang :</label>
-                            <input type="number" wire:model="count" class="form-control" id="count" required min="1">
+                            <input type="number" wire:model="count" class="form-control" id="count" required min="1" >
                             @error('count') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
-                        <div class="mb-3">
-                            <label for="created_at">Tanggal & Waktu Penjualan:</label>
-                            <input type="datetime-local" wire:model="created_at" class="form-control" id="created_at" required>
-                            @error('created_at') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" wire:click="closeModal">Keluar</button>
@@ -79,7 +73,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Script -->
     <script>
+        $(document).ready(function () {
+            $('#item').select2({
+                dropdownParent: $('#form-modal')
+            });
+            $('#item').on('change', function (e) {
+                var data = $('#item').select2("val");
+            @this.set('id_item', data);
+            });
+        });
+
+    
         document.addEventListener('DOMContentLoaded', function () {
             window.addEventListener('show-modal', event => {
                 var myModal = new bootstrap.Modal(document.getElementById('form-modal'), {
@@ -97,7 +104,13 @@
                 }
             });
         });
-
+        function updatePrice() {
+            const select = document.getElementById("item");
+            const selectedOption = select.options[select.selectedIndex];
+            const price = selectedOption.getAttribute("data-price");
+            document.getElementById("harga").value = price || '';
+        }
+        
     </script>
     
 </div>

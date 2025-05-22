@@ -43,7 +43,7 @@
 }
 
 [wire\:key="table-thead"]{
-    background-color: #FFA500;;
+    background-color: #FFA500;
     color: #FFFFFF;
 }
 
@@ -66,4 +66,28 @@ table.dataTable td{padding:15px 8px}
     border: none;
     outline: none;
     box-shadow: none;
+}
+
+.select2-container{
+    width: 100% !important;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: var(--bs-body-bg);
+    background-clip: padding-box;
+    border: var(--bs-border-width) solid var(--bs-border-color) ;
+    border-radius: var(--bs-border-radius);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.select2-container .select2-selection{
+    border: var(--bs-border-width) solid var(--bs-border-color) ;
+    border-radius: var(--bs-border-radius);
+}
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: #FFA500;
 }

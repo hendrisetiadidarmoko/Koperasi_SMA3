@@ -12,7 +12,7 @@ class ItemSell extends Model
     use HasFactory;
 
     protected $table = 'items_sell';
-    protected $fillable = ['id_item', 'price', 'count', 'user_id', 'created_at'];
+    protected $fillable = ['id_item', 'price', 'count', 'user_id'];
 
     
 

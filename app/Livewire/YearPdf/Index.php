@@ -23,6 +23,8 @@ class Index extends Component
     public $grandTotalRL = 0;
     public $grandTotal=0;
 
+    public $lastStock = 0;
+
     public $year, $month;
 
     public function mount($year)
@@ -46,6 +48,7 @@ class Index extends Component
             $monthlyData = Item::all()
                 ->map(function ($item) use ($month) {
                     // Hitung stok bulan sebelumnya
+            $priceBefore = $this ->getPriceBuyBefore($item);
             $previousMonthStock = $this->getPreviousMonthStock($item);
             $previousMonthStockTotal = $this->getPreviousMonthStockTotal($item);
             $totalBuy = $this->getTotalBuy($item);
@@ -66,9 +69,11 @@ class Index extends Component
             $priceTotalRL = $this->getPriceTotalRL($item);
 
             $remainingStock = $this->getRemainingStock($item);
+            $remainingPriceStock = $this->getRemainingPriceStock($item);
             $remainingStockPriceTotal = $this->getRemainingStockPriceTotal($item);
 
             // Tambahkan previous_stock ke item
+            $item->previous_price = $priceBefore;
             $item->previous_stock = $previousMonthStock;
             $item->previous_stock_total = $previousMonthStockTotal;
             $item->total_buy = $totalBuy;
@@ -85,6 +90,7 @@ class Index extends Component
             $item->price_buy_Rl = $priceBuyRL;
             $item->price_total_RL = $priceTotalRL;
             $item->total_remaining_stock = $remainingStock;
+            $item->total_remaining_price_stock = $remainingPriceStock;
             $item->price_total_remaining_stock = $remainingStockPriceTotal;
             return $item;
                 });
@@ -99,191 +105,205 @@ class Index extends Component
         return view('livewire.pdf.year')->layout('livewire.pdf.app');
     }
 
-    public function generatePdf($year)
-    {
-        $this->year = $year;
+    // public function generatePdf($year)
+    // {
+    //     $this->year = $year;
 
-        $this->items = collect();
+    //     $this->items = collect();
 
         
 
-        for ($month = 1; $month <= 12; $month++) {
-            $this->month = $month;
-            $this->grandTotalSupply = 0;
-            $this->grandTotalPurchase = 0;
-            $this->grandTotalSell = 0;
-            $this->grandTotalLastMonth = 0;
-            $this->grandTotalRL = 0;
-            $this->grandTotalSellRL = 0;
-            $this->grandTotalBuyRL = 0;
-            $this->grandTotal=0;
-            $monthlyData = Item::all()
-                ->map(function ($item) use ($month) {
-                    // Hitung stok bulan sebelumnya
-            $previousMonthStock = $this->getPreviousMonthStock($item);
-            $previousMonthStockTotal = $this->getPreviousMonthStockTotal($item);
-            $totalBuy = $this->getTotalBuy($item);
-            $priceBuy = $this->getPriceBuy($item);
-            $priceTotal = $this->getPriceTotalBuy($item);
+    //     for ($month = 1; $month <= 12; $month++) {
+    //         $this->month = $month;
+    //         $this->grandTotalSupply = 0;
+    //         $this->grandTotalPurchase = 0;
+    //         $this->grandTotalSell = 0;
+    //         $this->grandTotalLastMonth = 0;
+    //         $this->grandTotalRL = 0;
+    //         $this->grandTotalSellRL = 0;
+    //         $this->grandTotalBuyRL = 0;
+    //         $this->grandTotal=0;
+    //         $monthlyData = Item::all()
+    //             ->map(function ($item) use ($month) {
+    //                 // Hitung stok bulan sebelumnya
+    //         $previousMonthStock = $this->getPreviousMonthStock($item);
+    //         $previousMonthStockTotal = $this->getPreviousMonthStockTotal($item);
+    //         $totalBuy = $this->getTotalBuy($item);
+    //         $priceBuy = $this->getPriceBuy($item);
+    //         $priceTotal = $this->getPriceTotalBuy($item);
 
-            $totalItem = $this->getTotalItem($item);
-            $priceItem = $this->getPriceItem($item);
-            $priceTotalItem = $this->getPriceTotalItem($item);
+    //         $totalItem = $this->getTotalItem($item);
+    //         $priceItem = $this->getPriceItem($item);
+    //         $priceTotalItem = $this->getPriceTotalItem($item);
 
-            $totalSell = $this->getTotalSell($item);
-            $priceSell = $this->getPriceSell($item);
-            $priceTotalSell = $this->getPriceTotalSell($item);
+    //         $totalSell = $this->getTotalSell($item);
+    //         $priceSell = $this->getPriceSell($item);
+    //         $priceTotalSell = $this->getPriceTotalSell($item);
 
-            $totalRL = $this->getTotalRL($item);
-            $priceBuyRL = $this->getPriceBuyRL($item);
-            $priceSellRL = $this->getPriceSellRL($item);
-            $priceTotalRL = $this->getPriceTotalRL($item);
+    //         $totalRL = $this->getTotalRL($item);
+    //         $priceBuyRL = $this->getPriceBuyRL($item);
+    //         $priceSellRL = $this->getPriceSellRL($item);
+    //         $priceTotalRL = $this->getPriceTotalRL($item);
 
-            $remainingStock = $this->getRemainingStock($item);
-            $remainingStockPriceTotal = $this->getRemainingStockPriceTotal($item);
+    //         $remainingStock = $this->getRemainingStock($item);
+    //         $remainingStockPriceTotal = $this->getRemainingStockPriceTotal($item);
 
-            // Tambahkan previous_stock ke item
-            $item->previous_stock = $previousMonthStock;
-            $item->previous_stock_total = $previousMonthStockTotal;
-            $item->total_buy = $totalBuy;
-            $item->price_buy = $priceBuy;
-            $item->price_total = $priceTotal;
-            $item->total_item = $totalItem;
-            $item->price_item = $priceItem;
-            $item->price_total_item = $priceTotalItem;
-            $item->total_sell = $totalSell;
-            $item->price_sell = $priceSell;
-            $item->price_total_sell = $priceTotalSell;
-            $item->total_RL = $totalRL;
-            $item->price_sell_RL = $priceSellRL;
-            $item->price_buy_Rl = $priceBuyRL;
-            $item->price_total_RL = $priceTotalRL;
-            $item->total_remaining_stock = $remainingStock;
-            $item->price_total_remaining_stock = $remainingStockPriceTotal;
-            return $item;
-                });
+    //         // Tambahkan previous_stock ke item
+    //         $item->previous_stock = $previousMonthStock;
+    //         $item->previous_stock_total = $previousMonthStockTotal;
+    //         $item->total_buy = $totalBuy;
+    //         $item->price_buy = $priceBuy;
+    //         $item->price_total = $priceTotal;
+    //         $item->total_item = $totalItem;
+    //         $item->price_item = $priceItem;
+    //         $item->price_total_item = $priceTotalItem;
+    //         $item->total_sell = $totalSell;
+    //         $item->price_sell = $priceSell;
+    //         $item->price_total_sell = $priceTotalSell;
+    //         $item->total_RL = $totalRL;
+    //         $item->price_sell_RL = $priceSellRL;
+    //         $item->price_buy_Rl = $priceBuyRL;
+    //         $item->price_total_RL = $priceTotalRL;
+    //         $item->total_remaining_stock = $remainingStock;
+    //         $item->price_total_remaining_stock = $remainingStockPriceTotal;
+    //         return $item;
+    //             });
     
-            // Group the data by month
-            $this->items[$month] = $monthlyData;
-        }
-        $data = [
-            'items' => $this->items,
-            'grandTotalSupply' => $this->grandTotalSupply,
-            'grandTotalPurchase' => $this->grandTotalPurchase,
-            'grandTotalSell' => $this->grandTotalSell,
-            'grandTotalRL' => $this->grandTotalRL,
-            'grandTotalLastMonth' => $this->grandTotalLastMonth,
-            'grandTotalBuyRL' => $this->grandTotalBuyRL,
-            'grandTotalSellRL' => $this->grandTotalSellRL,
-            'grandTotal' =>$this->grandTotal,
-        ];
+    //         // Group the data by month
+    //         $this->items[$month] = $monthlyData;
+    //     }
+    //     $data = [
+    //         'items' => $this->items,
+    //         'grandTotalSupply' => $this->grandTotalSupply,
+    //         'grandTotalPurchase' => $this->grandTotalPurchase,
+    //         'grandTotalSell' => $this->grandTotalSell,
+    //         'grandTotalRL' => $this->grandTotalRL,
+    //         'grandTotalLastMonth' => $this->grandTotalLastMonth,
+    //         'grandTotalBuyRL' => $this->grandTotalBuyRL,
+    //         'grandTotalSellRL' => $this->grandTotalSellRL,
+    //         'grandTotal' =>$this->grandTotal,
+    //     ];
 
-        // Render PDF dari tampilan view
-        $pdf = Pdf::loadView('report-pdf.year', $data);
+    //     // Render PDF dari tampilan view
+    //     $pdf = Pdf::loadView('report-pdf.year', $data);
 
-        // Unduh file PDF
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
-        }, 'laporan-bulanan.pdf');
-    }
+    //     // Unduh file PDF
+    //     return response()->streamDownload(function () use ($pdf) {
+    //         echo $pdf->stream();
+    //     }, 'laporan-bulanan.pdf');
+    // }
 
     /**
      * Menghitung stok bulan sebelumnya untuk sebuah item
      */
 
-    public function getRemainingStock($item){
-        // Calculate Jumlah Persediaan Awal (previous month's stock + sales - purchases)
-        $originalMonth = (int)$this->month;
-        $originalYear = (int)$this->year;
+    public function getRemainingPriceStock($item){
+        $targetMonth = (int)$this->month;
+        $targetYear = (int)$this->year;
 
-        if ($originalMonth == 1) {
-            $previousMonth = 12;
-            $previousYear = $originalYear - 1;
-        } else {
-            $previousMonth = $originalMonth - 1;
-            $previousYear = $originalYear;
+        $allPurchases = collect();
+
+        // Loop dari Januari 2024 sampai bulan dan tahun saat ini
+        for ($year = 2024; $year <= $targetYear; $year++) {
+            $startMonth = ($year === 2024) ? 1 : 1;
+            $endMonth = ($year === $targetYear) ? $targetMonth : 12;
+
+            for ($month = $startMonth; $month <= $endMonth; $month++) {
+                $monthlyPurchases = $item->itemPurchases->filter(function ($purchase) use ($month, $year) {
+                    $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+                    return $purchaseDate->month === $month && $purchaseDate->year === $year;
+                });
+
+                $allPurchases = $allPurchases->merge($monthlyPurchases);
+            }
         }
 
-        // Get the total stock (initial inventory) for the previous month
-        $previousMonthStock = $item->itemPurchases
-            ->filter(function ($purchase) use ($previousMonth, $previousYear) {
-                $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
-                return $purchaseDate->month === $previousMonth && $purchaseDate->year === $previousYear;
-            })
-            ->sum('count') ?? 0;
+        // Mengambil harga-harga unik dari semua pembelian dalam periode tersebut
+        $uniquePrices = $allPurchases->pluck('price')->unique();
 
-        // Calculate Jumlah Persediaan Awal (Initial stock)
-        $initialStock = $previousMonthStock;
+        // Jika tidak ada harga ditemukan, kembalikan 0
+        if ($uniquePrices->isEmpty()) {
+            return '0';
+        }
 
-        // Calculate Jumlah Pembelian
-        $monthPurchasesCurrent = $item->itemPurchases->filter(function ($purchase) {
-            $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
-            return $purchaseDate->month === (int)$this->month && $purchaseDate->year === (int)$this->year;
-        });
-        $totalPurchaseCurrent = $monthPurchasesCurrent->sum('count') ?? 0;
+        // Format harga dan gabungkan dengan koma
+        return $uniquePrices->map(function ($price) {
+            return number_format($price ?? 0, 0, '.', ',');
+        })->implode(', ');
+    }
+    public function getRemainingStock($item){
 
-        $monthSells = $item->itemSells->filter(function ($sell) {
-            $sellDate = \Carbon\Carbon::parse($sell->created_at);
-            return $sellDate->month === (int)$this->month && $sellDate->year === (int)$this->year;
-        });
+        $targetMonth = (int)$this->month;
+        $targetYear = (int)$this->year;
 
-        $totalSellCurrent = $monthSells->sum('count') ?? 0;
+        $lastStock = 0;
 
-        // Calculate Jumlah Keadaan Barang (Initial stock + current month purchases)
-        return $initialStock + $totalPurchaseCurrent - $totalSellCurrent;
+        // Loop dari Januari 2024 sampai bulan dan tahun saat ini
+        for ($year = 2024; $year <= $targetYear; $year++) {
+            $startMonth = ($year === 2024) ? 1 : 1;
+            $endMonth = ($year === $targetYear) ? $targetMonth : 12;
+
+            for ($month = $startMonth; $month <= $endMonth; $month++) {
+                // Hitung pembelian bulan ini
+                $monthPurchases = $item->itemPurchases->filter(function ($purchase) use ($month, $year) {
+                    $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+                    return $purchaseDate->month === $month && $purchaseDate->year === $year;
+                })->sum('count') ?? 0;
+
+                // Hitung penjualan bulan ini
+                $monthSells = $item->itemSells->filter(function ($sell) use ($month, $year) {
+                    $sellDate = \Carbon\Carbon::parse($sell->created_at);
+                    return $sellDate->month === $month && $sellDate->year === $year;
+                })->sum('count') ?? 0;
+
+                // Tambahkan ke lastStock
+                $lastStock += $monthPurchases - $monthSells;
+            }
+        }
+
+        return  $lastStock;
     }
 
     public function getRemainingStockPriceTotal($item){
-        // Calculate Sisa Barang Akhir Bulan
-        $originalMonth = (int)$this->month;
-        $originalYear = (int)$this->year;
+        $targetMonth = (int)$this->month;
+        $targetYear = (int)$this->year;
 
-        if ($originalMonth == 1) {
-            $previousMonth = 12;
-            $previousYear = $originalYear - 1;
-        } else {
-            $previousMonth = $originalMonth - 1;
-            $previousYear = $originalYear;
+        $total = 0;
+
+        // Loop dari Januari 2024 sampai bulan dan tahun saat ini
+        for ($year = 2024; $year <= $targetYear; $year++) {
+            $startMonth = ($year === 2024) ? 1 : 1;
+            $endMonth = ($year === $targetYear) ? $targetMonth : 12;
+
+            for ($month = $startMonth; $month <= $endMonth; $month++) {
+                // Hitung pembelian bulan ini
+                $monthPurchases = $item->itemPurchases->filter(function ($purchase) use ($month, $year) {
+                    $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+                    return $purchaseDate->month === $month && $purchaseDate->year === $year;
+                });
+
+                $monthSells = $item->itemSells->filter(function ($sell) use ($month, $year) {
+                    $sellDate = \Carbon\Carbon::parse($sell->created_at);
+                    return $sellDate->month === $month && $sellDate->year === $year;
+                });
+
+                $totalPurchase = $monthPurchases->sum(function ($purchase) {
+                    return ($purchase->count ?? 0) * ($purchase->price ?? 0);
+                });
+
+                $totalSell = $monthSells->sum(function ($sell) {
+                    return ($sell->count ?? 0) * ($sell->price ?? 0);
+                });
+
+                // Tambahkan ke lastStock
+                $total += $totalPurchase - $totalSell;
+            }
         }
 
-        // Get the total stock (initial inventory) for the previous month
-        $previousMonthStock = $item->itemPurchases
-            ->filter(function ($purchase) use ($previousMonth, $previousYear) {
-                $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
-                return $purchaseDate->month === $previousMonth && $purchaseDate->year === $previousYear;
-            })
-            ->sum('count') ?? 0;
 
-        // Calculate Initial Stock
-        $initialStock = $previousMonthStock;
+        $this->grandTotalLastMonth+=$total;
+        return  $total;
 
-        // Calculate Purchases for the Current Month
-        $monthPurchasesCurrent = $item->itemPurchases->filter(function ($purchase) {
-            $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
-            return $purchaseDate->month === (int)$this->month && $purchaseDate->year === (int)$this->year;
-        });
-        $totalPurchaseCurrent = $monthPurchasesCurrent->sum('count') ?? 0;
-
-        // Calculate Sales for the Current Month
-        $monthSells = $item->itemSells->filter(function ($sell) {
-            $sellDate = \Carbon\Carbon::parse($sell->created_at);
-            return $sellDate->month === (int)$this->month && $sellDate->year === (int)$this->year;
-        });
-        $totalSellCurrent = $monthSells->sum('count') ?? 0;
-
-        // Calculate Sisa Barang Akhir Bulan
-        $sisaBarangAkhir = $initialStock + $totalPurchaseCurrent - $totalSellCurrent;
-
-        // Get Harga Barang
-        $hargaBarang = $item->price ?? 0;
-
-        // Calculate Total Harga Barang
-        $totalHargaBarang = $sisaBarangAkhir * $hargaBarang;
-
-        $this->grandTotalLastMonth+=$totalHargaBarang;
-
-        // Format the result
-        return $totalHargaBarang;
     }
     public function getTotalRL($item){
         $monthSells = $item->itemSells->filter(function ($sell) {
@@ -391,61 +411,111 @@ class Index extends Component
     }
     public function getPreviousMonthStock($item)
     {
-        // Store original month and year to avoid global changes
-        $originalMonth = (int)$this->month;
-        $originalYear = (int)$this->year;
+        $targetMonth = (int)$this->month-1;
+        $targetYear = (int)$this->year;
 
-        // Determine the previous month and year
-        if ($originalMonth == 1) {
-            $previousMonth = 12; // December
-            $previousYear = $originalYear - 1; // Previous year
-        } else {
-            $previousMonth = $originalMonth - 1; // Previous month
-            $previousYear = $originalYear; // Same year
+        $lastStock = 0;
+
+        // Loop dari Januari 2024 sampai bulan dan tahun saat ini
+        for ($year = 2024; $year <= $targetYear; $year++) {
+            $startMonth = ($year === 2024) ? 1 : 1;
+            $endMonth = ($year === $targetYear) ? $targetMonth : 12;
+
+            for ($month = $startMonth; $month <= $endMonth; $month++) {
+                // Hitung pembelian bulan ini
+                $monthPurchases = $item->itemPurchases->filter(function ($purchase) use ($month, $year) {
+                    $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+                    return $purchaseDate->month === $month && $purchaseDate->year === $year;
+                })->sum('count') ?? 0;
+
+                // Hitung penjualan bulan ini
+                $monthSells = $item->itemSells->filter(function ($sell) use ($month, $year) {
+                    $sellDate = \Carbon\Carbon::parse($sell->created_at);
+                    return $sellDate->month === $month && $sellDate->year === $year;
+                })->sum('count') ?? 0;
+
+                // Tambahkan ke lastStock
+                $lastStock += $monthPurchases - $monthSells;
+            }
         }
 
-        // Get the total stock (initial inventory) for the previous month
-        $previousMonthStock = $item->itemPurchases
-            ->filter(function ($purchase) use ($previousMonth, $previousYear) {
-                $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
-                return $purchaseDate->month === $previousMonth && $purchaseDate->year === $previousYear;
-            })
-            ->sum('count') ?? 0;
+        return  $lastStock;
+    }
 
+    public function getPreviousMonthPriceStock($item){
+        $targetMonth = (int)$this->month-1;
+        $targetYear = (int)$this->year;
 
-        // Return the stock for the current month, considering the previous month's stock
-        return $previousMonthStock;
+        $allPurchases = collect();
+
+        // Loop dari Januari 2024 sampai bulan dan tahun saat ini
+        for ($year = 2024; $year <= $targetYear; $year++) {
+            $startMonth = ($year === 2024) ? 1 : 1;
+            $endMonth = ($year === $targetYear) ? $targetMonth : 12;
+
+            for ($month = $startMonth; $month <= $endMonth; $month++) {
+                $monthlyPurchases = $item->itemPurchases->filter(function ($purchase) use ($month, $year) {
+                    $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+                    return $purchaseDate->month === $month && $purchaseDate->year === $year;
+                });
+
+                $allPurchases = $allPurchases->merge($monthlyPurchases);
+            }
+        }
+
+        // Mengambil harga-harga unik dari semua pembelian dalam periode tersebut
+        $uniquePrices = $allPurchases->pluck('price')->unique();
+
+        // Jika tidak ada harga ditemukan, kembalikan 0
+        if ($uniquePrices->isEmpty()) {
+            return '0';
+        }
+
+        // Format harga dan gabungkan dengan koma
+        return $uniquePrices->map(function ($price) {
+            return number_format($price ?? 0, 0, '.', ',');
+        })->implode(', ');
     }
 
     public function getPreviousMonthStockTotal($item){
-         // Store original month and year to avoid global changes
-        $originalMonth = (int)$this->month;
-        $originalYear = (int)$this->year;
+        $targetMonth = (int)$this->month-1;
+        $targetYear = (int)$this->year;
 
-         // Determine the previous month and year
-        if ($originalMonth == 1) {
-             $previousMonth = 12; // December
-             $previousYear = $originalYear - 1; // Previous year
-        } else {
-             $previousMonth = $originalMonth - 1; // Previous month
-             $previousYear = $originalYear; // Same year
+        $total = 0;
+
+        // Loop dari Januari 2024 sampai bulan dan tahun saat ini
+        for ($year = 2024; $year <= $targetYear; $year++) {
+            $startMonth = ($year === 2024) ? 1 : 1;
+            $endMonth = ($year === $targetYear) ? $targetMonth : 12;
+
+            for ($month = $startMonth; $month <= $endMonth; $month++) {
+                // Hitung pembelian bulan ini
+                $monthPurchases = $item->itemPurchases->filter(function ($purchase) use ($month, $year) {
+                    $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+                    return $purchaseDate->month === $month && $purchaseDate->year === $year;
+                });
+
+                $monthSells = $item->itemSells->filter(function ($sell) use ($month, $year) {
+                    $sellDate = \Carbon\Carbon::parse($sell->created_at);
+                    return $sellDate->month === $month && $sellDate->year === $year;
+                });
+
+                $totalPurchase = $monthPurchases->sum(function ($purchase) {
+                    return ($purchase->count ?? 0) * ($purchase->price ?? 0);
+                });
+
+                $totalSell = $monthSells->sum(function ($sell) {
+                    return ($sell->count ?? 0) * ($sell->price ?? 0);
+                });
+
+                // Tambahkan ke lastStock
+                $total += $totalPurchase - $totalSell;
+            }
         }
-
-         // Get the total stock (initial inventory) for the previous month
-        $previousMonthStock = $item->itemPurchases
-            ->filter(function ($purchase) use ($previousMonth, $previousYear) {
-                $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
-                return $purchaseDate->month === $previousMonth && $purchaseDate->year === $previousYear;
-            })
-            ->sum('count') ?? 0;
-
-        $price = $item->price ?? 0;
-        $result = $previousMonthStock * $price;
-
          // Add to the grand total
-         $this->grandTotalSupply += $result;
+         $this->grandTotalSupply += $total;
 
-         return $result;
+         return $total;
     }
     public function getTotalBuy($item){
         $monthPurchases = $item->itemPurchases->filter(function ($purchase) {
@@ -475,6 +545,37 @@ class Index extends Component
             return number_format($price ?? 0, 0, '.', ',');
         })->implode(', ');
     }
+
+    public function getPriceBuyBefore($item){
+        $originalMonth = (int)$this->month;
+        $originalYear = (int)$this->year;
+
+        if ($originalMonth == 1) {
+            $previousMonth = 12;
+            $previousYear = $originalYear - 1;
+        } else {
+            $previousMonth = $originalMonth - 1;
+            $previousYear = $originalYear;
+        }
+
+        $monthPurchases = $item->itemPurchases->filter(function ($purchase) use ($previousMonth, $previousYear) {
+            $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+            return $purchaseDate->month === $previousMonth && $purchaseDate->year === $previousYear;
+        });
+    
+        // Mendapatkan semua harga yang unik (tidak duplikat)
+        $uniquePrices = $monthPurchases->pluck('price')->unique();
+    
+        // Jika tidak ada harga ditemukan, kembalikan 0
+        if ($uniquePrices->isEmpty()) {
+            return '0';
+        }
+    
+        // Menggabungkan harga yang berbeda dengan koma sebagai pemisah
+        return $uniquePrices->map(function ($price) {
+            return number_format($price ?? 0, 0, '.', ',');
+        })->implode(', ');
+    }
     public function getPriceTotalBuy($item){
         // Memfilter pembelian yang terjadi di bulan November  $this->year
         $monthPurchases = $item->itemPurchases->filter(function ($purchase) {
@@ -493,124 +594,185 @@ class Index extends Component
     }
 
     public function getTotalItem($item){
-        // Calculate Jumlah Persediaan Awal (previous month's stock + sales - purchases)
-        $originalMonth = (int)$this->month;
-        $originalYear = (int)$this->year;
-
-        if ($originalMonth == 1) {
-            $previousMonth = 12;
-            $previousYear = $originalYear - 1;
-        } else {
-            $previousMonth = $originalMonth - 1;
-            $previousYear = $originalYear;
-        }
-
-        // Get the total stock (initial inventory) for the previous month
-        $previousMonthStock = $item->itemPurchases
-            ->filter(function ($purchase) use ($previousMonth, $previousYear) {
-                $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
-                return $purchaseDate->month === $previousMonth && $purchaseDate->year === $previousYear;
-            })
-            ->sum('count') ?? 0;
-
-        // Calculate Jumlah Persediaan Awal (Initial stock)
-        $initialStock = $previousMonthStock;
-
-        // Calculate Jumlah Pembelian
-        $monthPurchasesCurrent = $item->itemPurchases->filter(function ($purchase) {
+        // Pembelian bulan ini
+        $monthPurchasesStock = $item->itemPurchases->filter(function ($purchase) {
             $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
             return $purchaseDate->month === (int)$this->month && $purchaseDate->year === (int)$this->year;
-        });
-        $totalPurchaseCurrent = $monthPurchasesCurrent->sum('count') ?? 0;
+        })->sum('count') ?? 0;
 
-        // Calculate Jumlah Keadaan Barang (Initial stock + current month purchases)
-        return $initialStock + $totalPurchaseCurrent;
+        // Hitung persediaan awal (sampai bulan sebelumnya)
+        $targetMonth = (int)$this->month - 1;
+        $targetYear = (int)$this->year;
+
+        $lastStock = 0;
+
+        for ($year = 2024; $year <= $targetYear; $year++) {
+            $endMonth = ($year === $targetYear) ? $targetMonth : 12;
+
+            for ($month = 1; $month <= $endMonth; $month++) {
+                $monthPurchases = $item->itemPurchases->filter(function ($purchase) use ($month, $year) {
+                    $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+                    return $purchaseDate->month === $month && $purchaseDate->year === $year;
+                })->sum('count') ?? 0;
+
+                $monthSells = $item->itemSells->filter(function ($sell) use ($month, $year) {
+                    $sellDate = \Carbon\Carbon::parse($sell->created_at);
+                    return $sellDate->month === $month && $sellDate->year === $year;
+                })->sum('count') ?? 0;
+
+                $lastStock += $monthPurchases - $monthSells;
+            }
+        }
+
+        // Total stok bulan ini = persediaan awal + pembelian bulan ini
+        $totalStock = $lastStock + $monthPurchasesStock;
+
+        return $totalStock;
     }
 
-    public function getPriceItem($item){
-        // Get the "Harga Persediaan Awal" (initial stock price)
-        $initialStockPrice = $item->price ?? 0;
-            
-        // Memfilter pembelian yang terjadi di bulan yang ditentukan
+    public function getPriceItem($item)
+    {
+        // Pembelian bulan ini
         $monthPurchases = $item->itemPurchases->filter(function ($purchase) {
             $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
             return $purchaseDate->month === (int)$this->month && $purchaseDate->year === (int)$this->year;
         });
 
-        // Mendapatkan semua harga yang unik (tidak duplikat) dari pembelian
-        $uniquePurchasePrices = $monthPurchases->pluck('price')->unique();
+        // Keadaan awal (sebelum bulan ini)
+        $targetMonth = (int)$this->month - 1;
+        $targetYear = (int)$this->year;
 
-        // Jika tidak ada harga ditemukan dari pembelian, set ke 0
-        if ($uniquePurchasePrices->isEmpty()) {
-            $uniquePurchasePrices = collect([0]);
+        $allPurchases = collect();
+
+        for ($year = 2024; $year <= $targetYear; $year++) {
+            $endMonth = ($year === $targetYear) ? $targetMonth : 12;
+
+            for ($month = 1; $month <= $endMonth; $month++) {
+                $monthlyPurchases = $item->itemPurchases->filter(function ($purchase) use ($month, $year) {
+                    $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+                    return $purchaseDate->month === $month && $purchaseDate->year === $year;
+                });
+
+                $allPurchases = $allPurchases->merge($monthlyPurchases);
+            }
         }
 
-        // Combine the "Harga Persediaan Awal" and purchase prices, remove duplicates
-        $allPrices = $uniquePurchasePrices->push($initialStockPrice)->unique();
+        // Gabungkan pembelian bulan ini dengan keadaan awal
+        $combinedPurchases = $allPurchases->merge($monthPurchases);
 
-        // Return the combined prices as a comma-separated string
-        return $allPrices->map(function ($price) {
+        // Ambil harga-harga unik
+        $uniquePrices = $combinedPurchases->pluck('price')->unique();
+
+        // Jika tidak ada harga ditemukan, kembalikan 0
+        if ($uniquePrices->isEmpty()) {
+            return '0';
+        }
+
+        // Format harga dan gabungkan dengan koma
+        return $uniquePrices->map(function ($price) {
             return number_format($price ?? 0, 0, '.', ',');
         })->implode(', ');
+        // $originalMonth = (int)$this->month;
+        // $originalYear = (int)$this->year;
+
+        // // Hitung bulan dan tahun sebelumnya
+        // if ($originalMonth == 1) {
+        //     $previousMonth = 12;
+        //     $previousYear = $originalYear - 1;
+        // } else {
+        //     $previousMonth = $originalMonth - 1;
+        //     $previousYear = $originalYear;
+        // }
+
+        // // Filter pembelian bulan sebelumnya
+        // $monthPurchasesBefore = $item->itemPurchases->filter(function ($purchase) use ($previousMonth, $previousYear) {
+        //     $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+        //     return $purchaseDate->month === $previousMonth && $purchaseDate->year === $previousYear;
+        // });
+
+        // // Ambil harga unik pembelian bulan sebelumnya
+        // $uniquePrices = $monthPurchasesBefore->pluck('price')->unique();
+
+        // // Jika tidak ada harga bulan sebelumnya, set ke collection kosong
+        // if ($uniquePrices->isEmpty()) {
+        //     $uniquePrices = collect();
+        // }
+
+        // // Ambil pembelian bulan saat ini
+        // $monthPurchases = $item->itemPurchases->filter(function ($purchase) use ($originalMonth, $originalYear) {
+        //     $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+        //     return $purchaseDate->month === $originalMonth && $purchaseDate->year === $originalYear;
+        // });
+
+        // // Ambil harga unik pembelian bulan ini
+        // $uniquePurchasePrices = $monthPurchases->pluck('price')->unique();
+
+        // // Jika tidak ada harga pembelian bulan ini, set 0
+        // if ($uniquePurchasePrices->isEmpty()) {
+        //     $uniquePurchasePrices = collect([0]);
+        // }
+
+        // // Gabungkan harga bulan sebelumnya dan bulan ini, hapus duplikat
+        // $allPrices = $uniquePrices->merge($uniquePurchasePrices)->unique();
+
+        // // Jika semua harga kosong, kembalikan '0'
+        // if ($allPrices->isEmpty()) {
+        //     return '0';
+        // }
+
+        // // Format dan gabungkan harga jadi string dipisah koma
+        // return $allPrices->map(function ($price) {
+        //     return number_format($price ?? 0, 0, '.', ',');
+        // })->implode(', ');
     }
 
+
     public function getPriceTotalItem($item){
-        // Calculate Jumlah Keadaan Barang
-        $originalMonth = (int)$this->month;
-        $originalYear = (int)$this->year;
-
-        if ($originalMonth == 1) {
-            $previousMonth = 12;
-            $previousYear = $originalYear - 1;
-        } else {
-            $previousMonth = $originalMonth - 1;
-            $previousYear = $originalYear;
-        }
-
-        // Get the total stock (initial inventory) for the previous month
-        $previousMonthStock = $item->itemPurchases
-            ->filter(function ($purchase) use ($previousMonth, $previousYear) {
-                $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
-                return $purchaseDate->month === $previousMonth && $purchaseDate->year === $previousYear;
-            })
-            ->sum('count') ?? 0;
-
-        $initialStock = $previousMonthStock;
-
-        // Calculate Jumlah Pembelian for the current month
-        $monthPurchasesCurrent = $item->itemPurchases->filter(function ($purchase) {
+        // Pembelian bulan ini
+        $monthPurchasesStock = $item->itemPurchases->filter(function ($purchase) {
             $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
             return $purchaseDate->month === (int)$this->month && $purchaseDate->year === (int)$this->year;
         });
 
-        $totalPurchaseCurrent = $monthPurchasesCurrent->sum('count') ?? 0;
-
-        $jumlahKeadaanBarang = $initialStock + $totalPurchaseCurrent;
-
-        // Calculate Harga Keadaan Barang
-        $initialStockPrice = $item->price ?? 0;
-
-        $monthPurchases = $item->itemPurchases->filter(function ($purchase) {
-            $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
-            return $purchaseDate->month === (int)$this->month && $purchaseDate->year === (int)$this->year;
+        $totalBuy = $monthPurchasesStock->sum(function ($purchase) {
+            return ($purchase->count ?? 0) * ($purchase->price ?? 0);
         });
 
-        $uniquePurchasePrices = $monthPurchases->pluck('price')->unique();
+        // Hitung persediaan awal (sampai bulan sebelumnya)
+        $targetMonth = (int)$this->month - 1;
+        $targetYear = (int)$this->year;
 
-        if ($uniquePurchasePrices->isEmpty()) {
-            $uniquePurchasePrices = collect([0]);
+        $total = 0;
+
+        for ($year = 2024; $year <= $targetYear; $year++) {
+            $endMonth = ($year === $targetYear) ? $targetMonth : 12;
+
+            for ($month = 1; $month <= $endMonth; $month++) {
+                $monthPurchases = $item->itemPurchases->filter(function ($purchase) use ($month, $year) {
+                    $purchaseDate = \Carbon\Carbon::parse($purchase->created_at);
+                    return $purchaseDate->month === $month && $purchaseDate->year === $year;
+                });
+
+                $totalPurchase = $monthPurchases->sum(function ($purchase) {
+                    return ($purchase->count ?? 0) * ($purchase->price ?? 0);
+                });
+
+                $monthSells = $item->itemSells->filter(function ($sell) use ($month, $year) {
+                    $sellDate = \Carbon\Carbon::parse($sell->created_at);
+                    return $sellDate->month === $month && $sellDate->year === $year;
+                });
+
+                $totalSell = $monthSells->sum(function ($purchase) {
+                    return ($purchase->count ?? 0) * ($purchase->price ?? 0);
+                });
+
+                $total += $totalPurchase - $totalSell;
+            }
         }
 
-        $allPrices = $uniquePurchasePrices->push($initialStockPrice)->unique();
+        // Total stok bulan ini = persediaan awal + pembelian bulan ini
+        $totalStock = $total + $totalBuy;
 
-        // Average Price (assuming total value calculation uses average of all prices)
-        $averagePrice = $allPrices->average();
-
-        // Calculate Total Keadaan Barang (Jumlah Keadaan Barang * Average Price)
-        $totalKeadaanBarang = $jumlahKeadaanBarang * ($averagePrice ?? 0);
-
-        $this->grandTotal += $totalKeadaanBarang;
-        // Format the result
-        return $totalKeadaanBarang;
+        return $totalStock;
     }
 }

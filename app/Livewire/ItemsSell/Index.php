@@ -14,7 +14,7 @@ class Index extends Component
     public $name;
     public $itemId = null;
     public $items = [];
-    public $count, $id_item, $created_at;
+    public $count = 1, $id_item, $created_at;
 
     public function mount() 
     {
@@ -50,7 +50,6 @@ class Index extends Component
             'id_item' => 'required|exists:items,id',
             'price' => 'required|numeric|min:0',
             'count' => 'required|numeric|min:1',
-            'created_at' => 'required'
         ]);
 
         $item = Item::find($this->id_item);
@@ -67,7 +66,7 @@ class Index extends Component
             // Create a new ItemPurchase
             if ($item->count < $this->count) {
                 session()->flash('message', 'Jumlah barang tidak mencukupi!');
-                $this->reset();
+                $this->resetExcept('items');
                 $this->dispatch('re_render_table');
                 $this->closeModal();
                 return;
@@ -80,7 +79,7 @@ class Index extends Component
 
         $item->save();
 
-        $this->reset();
+        $this->resetExcept('items');
         $this->dispatch('re_render_table');
         $this->closeModal();
     }
@@ -93,7 +92,6 @@ class Index extends Component
             $this->id_item = $itemPurchase->id_item;
             $this->price = $itemPurchase->price;
             $this->count = $itemPurchase->count;
-            $this->created_at = Carbon::parse($itemPurchase->created_at)->format('Y-m-d\TH:i');
             $this->dispatch('show-modal');
         }
     }

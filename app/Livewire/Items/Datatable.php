@@ -42,10 +42,16 @@ class Datatable extends DataTableComponent
             Column::make('Nama', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Harga', 'price')
+            Column::make('Harga Penjualan', 'price')
                 ->sortable()
                 ->format(function ($value) {
-                    return number_format($value, 0, '.', '');
+                    return number_format($value ?? 0, 0, '.', ',');
+                }),
+            Column::make('Harga Pembelian', 'price_buy')
+                ->sortable()
+                ->format(function ($value) {
+                    
+                    return number_format($value ?? 0, 0, '.', ',');
                 }),
             Column::make('Jumlah', 'count')
                 ->sortable(),

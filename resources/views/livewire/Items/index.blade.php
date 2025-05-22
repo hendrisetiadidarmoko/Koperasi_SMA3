@@ -1,5 +1,5 @@
 <div class="container" >
-    <div class="page-heading my-5" data-aos="fade-left">
+    <div class="page-heading my-5">
         <div class="page-title">
             <div class="row">
                 <div class="order-md-1 order-last">
@@ -32,9 +32,9 @@
     </div>
 
     <!-- Modal -->
-    <div  class="modal fade {{ $modalId }}" id="form-modal" tabindex="-1" aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
+    <div  class="modal fade {{ $modalId }}" id="form-modal" tabindex="-1" aria-labelledby="{{ $modalId }}Label" aria-hidden="true" >
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content" >
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="{{ $modalId }}Label"> {{ $itemId ? 'Edit Barang' : 'Tambah Barang' }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal"></button>
@@ -46,9 +46,13 @@
                             <input type="text" wire:model="name" class="form-control" id="name" required>
                             @error('name') <span class="text-danger">{{ $message }}</span> @enderror
 
-                            <label for="harga">Harga Barang : </label>
+                            <label for="harga">Harga Penjualan Barang : </label>
                             <input type="number" wire:model="price" class="form-control" id="harga" required min="0" step="0.01">
                             @error('price') <span class="text-danger">{{ $message }}</span> @enderror
+
+                            <label for="harga">Harga Pembelian Barang : </label>
+                            <input type="number" wire:model="price_buy" class="form-control" id="harga" required min="0" step="0.01">
+                            @error('price_buy') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="modal-footer">

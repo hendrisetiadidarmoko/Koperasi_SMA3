@@ -43,14 +43,14 @@ class Datatable extends DataTableComponent
             Column::make('Harga', 'price')
                 ->sortable()
                 ->format(function ($value) {
-                    return number_format($value, 0, '.', '');
+                    return number_format($value ?? 0, 0, '.', ',');
                 }),
             Column::make('Jumlah', 'count')
                 ->sortable(),
             Column::make('Total')
                 ->label(function ($row, Column $column) {
                 $total = $row->count * $row->price; // Menghitung Total
-                return number_format($total, 0, '.', ''); // Format total
+                return number_format($total ?? 0, 0, '.', ',');
             }),
             Column::make('Dibuat Oleh', 'user.name')
                 ->sortable(),

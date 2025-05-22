@@ -15,7 +15,8 @@ class Index extends Component
     public $name;
     public $itemId = null;
     public $items = [];
-    public $count, $id_item, $created_at;
+    public $count =1;
+    public $id_item;
 
     public function mount() 
     {
@@ -25,7 +26,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.items-purchase.index', [
-            'items' => $this->items
+            'items' => $this->items,
         ])->layoutData(['title' => 'Pembelian Barang']);
     }
 
@@ -44,14 +45,13 @@ class Index extends Component
     public function save()
     {
         $this->resetErrorBag();
-
         // Validate the form fields
         $validated = $this->validate([
             'id_item' => 'required|exists:items,id',
             'price' => 'required|numeric|min:0',
             'count' => 'required|numeric|min:1',
-            'created_at' => 'required'
         ]);
+
         
         
 
@@ -75,7 +75,7 @@ class Index extends Component
 
         $item->save();
 
-        $this->reset();
+        $this->resetExcept('items');
         $this->dispatch('re_render_table');
         $this->closeModal();
     }
@@ -88,7 +88,6 @@ class Index extends Component
             $this->id_item = $itemPurchase->id_item;
             $this->price = $itemPurchase->price;
             $this->count = $itemPurchase->count;
-            $this->created_at = Carbon::parse($itemPurchase->created_at)->format('Y-m-d\TH:i');
             $this->dispatch('show-modal');
         }
     }
@@ -112,4 +111,14 @@ class Index extends Component
 
         $this->dispatch('re_render_table');
     }
+    public function updatedIdItem($value)
+    {
+        $item = Item::find($value);
+        if ($item) {
+            $this->price = $item->price_buy;
+        } else {
+            $this->price = null;
+        }
+    }
+    
 }

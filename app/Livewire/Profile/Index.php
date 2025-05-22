@@ -40,8 +40,8 @@ class Index extends Component
     {
         // Validate the input data
         $this->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:50',
             'phone_number' => 'required|digits_between:10,15',
         ]);
 
@@ -56,31 +56,31 @@ class Index extends Component
         session()->flash('message', 'Profile updated successfully.');
     }
 
-    public function updatePhoto()
-    {
-        $this->validate([
-            'photo' => 'required|image|max:1024',
-        ]);
+    // public function updatePhoto()
+    // {
+    //     $this->validate([
+    //         'photo' => 'required|image|max:1024',
+    //     ]);
 
-        $user = Auth::user();
-        $path = $this->photo->store('profile-photos', 'public');
+    //     $user = Auth::user();
+    //     $path = $this->photo->store('profile-photos', 'public');
 
-        // Hapus foto lama jika ada
-        if ($user->profile_photo) {
-            \Storage::disk('public')->delete($user->profile_photo);
-        }
+    //     // Hapus foto lama jika ada
+    //     if ($user->profile_photo) {
+    //         \Storage::disk('public')->delete($user->profile_photo);
+    //     }
 
-        $user->profile_photo = $path;
-        $user->save();
+    //     $user->profile_photo = $path;
+    //     $user->save();
 
-        session()->flash('message', 'Foto profil berhasil diubah!');
-    }
+    //     session()->flash('message', 'Foto profil berhasil diubah!');
+    // }
 
     public function updatePass()
     {
         // Validate the password fields
         $this->validate([
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|confirmed|max:60',
         ]);
 
         // Update the user's password
