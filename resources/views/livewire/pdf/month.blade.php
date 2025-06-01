@@ -8,220 +8,160 @@
         Export
     </button> --}}
     {{-- <button onClick="window.print()">print</button> --}}
-        <div class="mb-5">
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered border-dark rounded-2">
-                    <thead class="table-light border-dark">
+    <div class="mb-5 print">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered border-dark rounded-2">
+                <thead class="table-light border-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama Barang</th>
+                        <th>Jumlah Persediaan Awal</th>
+                        <th>Harga Persediaan Awal</th>
+                        <th>Total Persediaan Awal</th>
+                        <th>Jumlah Pembelian</th>
+                        <th>Harga Pembelian</th>
+                        <th>Total Harga Pembelian</th>
+                        <th>Jumlah Keadaan Barang</th>
+                        <th>Harga Keadaan Barang</th>
+                    </tr>
+                </thead>
+                <tbody class="table-light border-dark">
+                    @php
+                        $totalPreviousStock = 0;
+                        $totalBuyItem = 0;
+                        $totalItem = 0;
+                        $totalSellItem = 0;
+                        $totalSellRL = 0;
+                        $totalBuyRL = 0;
+                        $totalRL = 0;
+                        $totalRemainingStock = 0;
+                    @endphp
+                    @forelse ($items[$month] as $item)
                         <tr>
-                            <th>ID</th>
-                            <th>Nama Barang</th>
-                            <th>Jumlah Persediaan Awal</th>
-                            <th>Harga Persediaan Awal</th>
-                            <th>Total Persediaan Awal</th>
-                            <th>Jumlah Pembelian</th>
-                            <th>Harga Pembelian</th>
-                            <th>Total Harga Pembelian</th>
+                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->previous_stock }}</td> 
+                            <td>{{ $item->previous_price ?? 0, 0, '.', ',' }}</td> 
+                            <td>{{ number_format($item->previous_stock_total ?? 0, 0, '.', ',') }}</td> 
+                            <td>{{$item->total_buy}}</td>
+                            <td>{{ $item->price_buy ?? 0, 0, '.', ',' }}</td> 
+                            <td>{{ number_format($item->price_total ?? 0, 0, '.', ',') }}</td> 
+                            <td>{{$item->total_item}}</td>
+                            <td>{{ $item->price_item ?? 0, 0, '.', ','}}</td>
                         </tr>
-                    </thead>
-                    <tbody class="table-light border-dark">
-                        @php
-                            $totalPreviousStock = 0;
-                            $totalBuyItem = 0;
-                            $totalItem = 0;
-                            $totalSellItem = 0;
-                            $totalSellRL = 0;
-                            $totalBuyRL = 0;
-                            $totalRL = 0;
-                            $totalRemainingStock = 0;
-                        @endphp
-                        @forelse ($items[$month] as $item)
-                            <tr>
-                                <td>{{ $item->id }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td>{{ $item->previous_stock }}</td> 
-                                <td>{{ $item->previous_price ?? 0, 0, '.', ',' }}</td> 
-                                <td>{{ number_format($item->previous_stock_total ?? 0, 0, '.', ',') }}</td> 
-                                <td>{{$item->total_buy}}</td>
-                                <td>{{ $item->price_buy ?? 0, 0, '.', ',' }}</td> 
-                                <td>{{ number_format($item->price_total ?? 0, 0, '.', ',') }}</td> 
-                                
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="21" class="text-center">Tidak ada data untuk bulan ini</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                    @if($items[$month]->isNotEmpty())
-                        <tfoot class="table-light border-dark">
-                            <tr>
-                                <td colspan="4" class="fw-bold">Grand Total</td>
-                                @foreach ($items[$month] as $item)
-                                    @php
-                                        $totalPreviousStock += $item->previous_stock_total ?? 0;
-
-                                        $totalBuyItem += $item->price_total ?? 0;
-
-                                        $totalItem += $item->price_total_item ?? 0;
-                                        
-                                        $totalSellItem += $item->price_total_sell ?? 0;
-                                        $totalBuyRL += $item->price_buy_Rl ?? 0;
-                                        $totalSellRL += $item->price_sell_RL ?? 0;
-                                        $totalRL += $item->price_total_RL ?? 0;
-                                        $totalRemainingStock += $item->price_total_remaining_stock ?? 0;
-                                        
-                                    @endphp
-                                @endforeach
-                                <td><strong>{{ number_format($totalPreviousStock, 0, '.', ',') }}</strong></td>
-                                <td colspan="3" class="text-end">{{ number_format($totalBuyItem ?? 0, 0, '.', ',') }}</td>
-                            </tr>
-                        </tfoot>
-                    @endif
-                </table>
-                <table class="table table-striped table-bordered border-dark rounded-2">
-                    <thead class="table-light border-dark">
+                    @empty
                         <tr>
-                            <th>ID</th>
-                            <th>Nama Barang</th>
-                            <th>Jumlah Keadaan Barang</th>
-                            <th>Harga Keadaan Barang</th>
-                            <th>Total Harga Keadaan Barang</th>
-                            <th>Jumlah Penjualan</th>
-                            <th>Harga Penjualan</th>
-                            <th>Total Harga Penjualan</th>
-                            
+                            <td colspan="21" class="text-center">Tidak ada data untuk bulan ini</td>
                         </tr>
-                    </thead>
-                    <tbody class="table-light border-dark">
-                        @php
-                            $totalPreviousStock = 0;
-                            $totalBuyItem = 0;
-                            $totalItem = 0;
-                            $totalSellItem = 0;
-                            $totalSellRL = 0;
-                            $totalBuyRL = 0;
-                            $totalRL = 0;
-                            $totalRemainingStock = 0;
-                        @endphp
-                        @forelse ($items[$month] as $item)
-                            <tr>
-                                <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
+                    @endforelse
+                </tbody>
+                @if($items[$month]->isNotEmpty())
+                    <tfoot class="table-light border-dark">
+                        <tr>
+                            <td colspan="4" class="fw-bold">Grand Total</td>
+                            @foreach ($items[$month] as $item)
+                                @php
+                                    $totalPreviousStock += $item->previous_stock_total ?? 0;
+
+                                    $totalBuyItem += $item->price_total ?? 0;
+
+                                    $totalItem += $item->price_total_item ?? 0;
                                     
-                                    <td>{{$item->total_item}}</td>
-                                    <td>{{ $item->price_item ?? 0, 0, '.', ','}}</td>
-                                    <td>{{ number_format($item->price_total_item ?? 0, 0, '.', ',') }}</td> 
-                                    <td>{{$item->total_sell}}</td>
-                                    <td>{{ $item->price_sell ?? 0, 0, '.', ','}}</td>
-                                    <td>{{ number_format($item->price_total_sell ?? 0, 0, '.', ',') }}</td>
-                                
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="21" class="text-center">Tidak ada data untuk bulan ini</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                    @if($items[$month]->isNotEmpty())
-                        <tfoot class="table-light border-dark">
-                            <tr>
-                                <td colspan="4" class="fw-bold">Grand Total</td>
-                                @foreach ($items[$month] as $item)
-                                    @php
-                                        $totalPreviousStock += $item->previous_stock_total ?? 0;
-
-                                        $totalBuyItem += $item->price_total ?? 0;
-
-                                        $totalItem += $item->price_total_item ?? 0;
-                                        
-                                        $totalSellItem += $item->price_total_sell ?? 0;
-                                        $totalBuyRL += $item->price_buy_Rl ?? 0;
-                                        $totalSellRL += $item->price_sell_RL ?? 0;
-                                        $totalRL += $item->price_total_RL ?? 0;
-                                        $totalRemainingStock += $item->price_total_remaining_stock ?? 0;
-                                        
-                                    @endphp
-                                @endforeach
-                                <td  class="text-end">{{ number_format($totalItem ?? 0, 0, '.', ',') }}</td>
-                                <td colspan="3" class="text-end">{{ number_format($totalSellItem ?? 0, 0, '.', ',') }}</td>
-                            </tr>
-                        </tfoot>
-                    @endif
-                </table>
-                <table class="table table-striped table-bordered border-dark rounded-2">
-                    <thead class="table-light border-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Nama Barang</th>
-                            <th>Jumlah R/L</th>
-                            <th>Beli R/L</th>
-                            <th>Jual R/L</th>
-                            <th>Total R/L</th>
-                            <th>Sisa Barang Akhir Bulan</th>
-                            <th>Harga Barang</th>
-                            <th>Total Harga Barang Sisa</th>
+                                    $totalSellItem += $item->price_total_sell ?? 0;
+                                    $totalBuyRL += $item->price_buy_Rl ?? 0;
+                                    $totalSellRL += $item->price_sell_RL ?? 0;
+                                    $totalRL += $item->price_total_RL ?? 0;
+                                    $totalRemainingStock += $item->price_total_remaining_stock ?? 0;
+                                    
+                                @endphp
+                            @endforeach
+                            <td><strong>{{ number_format($totalPreviousStock, 0, '.', ',') }}</strong></td>
+                            <td colspan="3" class="text-end">{{ number_format($totalBuyItem ?? 0, 0, '.', ',') }}</td>
                         </tr>
-                    </thead>
-                    <tbody class="table-light border-dark">
-                        @php
-                            $totalPreviousStock = 0;
-                            $totalBuyItem = 0;
-                            $totalItem = 0;
-                            $totalSellItem = 0;
-                            $totalSellRL = 0;
-                            $totalBuyRL = 0;
-                            $totalRL = 0;
-                            $totalRemainingStock = 0;
-                        @endphp
-                        @forelse ($items[$month] as $item)
-                            <tr>
-                                <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{$item->total_RL}}</td>
-                                    <td>{{ number_format($item->price_buy_Rl ?? 0, 0, '.', ',') }}</td>
-                                    <td>{{ number_format($item->price_sell_RL ?? 0, 0, '.', ',') }}</td>
-                                    <td>{{ number_format($item->price_total_RL ?? 0, 0, '.', ',') }}</td>
-                                    <td>{{$item->total_remaining_stock}}</td>
-                                    <td>{{ $item->total_remaining_price_stock ?? 0, 0, '.', ',' }}</td>
-                                    <td>{{ number_format($item->price_total_remaining_stock ?? 0, 0, '.', ',') }}</td>
-                                
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="21" class="text-center">Tidak ada data untuk bulan ini</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                    @if($items[$month]->isNotEmpty())
-                        <tfoot class="table-light border-dark">
-                            <tr>
-                                <td colspan="3" class="fw-bold">Grand Total</td>
-                                @foreach ($items[$month] as $item)
-                                    @php
-                                        $totalPreviousStock += $item->previous_stock_total ?? 0;
+                    </tfoot>
+                @endif
+            </table>
+            <table class="table table-striped table-bordered border-dark rounded-2">
+                <thead class="table-light border-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Total Harga Keadaan Barang</th>
+                        <th>Jumlah Penjualan</th>
+                        <th>Harga Penjualan</th>
+                        <th>Total Harga Penjualan</th>
+                        <th>Jumlah R/L</th>
+                        <th>Beli R/L</th>
+                        <th>Jual R/L</th>
+                        <th>Total R/L</th>
+                        <th>Sisa Barang Akhir Bulan</th>
+                        <th>Harga Barang</th>
+                        <th>Total Harga Barang Sisa</th>
+                    </tr>
+                </thead>
+                <tbody class="table-light border-dark">
+                    @php
+                        $totalPreviousStock = 0;
+                        $totalBuyItem = 0;
+                        $totalItem = 0;
+                        $totalSellItem = 0;
+                        $totalSellRL = 0;
+                        $totalBuyRL = 0;
+                        $totalRL = 0;
+                        $totalRemainingStock = 0;
+                    @endphp
+                    @forelse ($items[$month] as $item)
+                        <tr>
+                            <td>{{ $item->id }}</td>
+                                <td>{{ number_format($item->price_total_item ?? 0, 0, '.', ',') }}</td>
+                                <td>{{$item->total_sell}}</td>
+                                <td>{{ $item->price_sell ?? 0, 0, '.', ','}}</td>
+                                <td>{{ number_format($item->price_total_sell ?? 0, 0, '.', ',') }}</td>
+                                <td>{{$item->total_RL}}</td>
+                                <td>{{ number_format($item->price_buy_Rl ?? 0, 0, '.', ',') }}</td>
+                                <td>{{ number_format($item->price_sell_RL ?? 0, 0, '.', ',') }}</td>
+                                <td>{{ number_format($item->price_total_RL ?? 0, 0, '.', ',') }}</td>
+                                <td>{{$item->total_remaining_stock}}</td>
+                                <td>{{ $item->total_remaining_price_stock ?? 0, 0, '.', ',' }}</td>
+                                <td>{{ number_format($item->price_total_remaining_stock ?? 0, 0, '.', ',') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="21" class="text-center">Tidak ada data untuk bulan ini</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+                @if($items[$month]->isNotEmpty())
+                    <tfoot class="table-light border-dark">
+                        <tr>
+                            <td  class="fw-bold">Grand Total</td>
+                            @foreach ($items[$month] as $item)
+                                @php
+                                    $totalPreviousStock += $item->previous_stock_total ?? 0;
 
-                                        $totalBuyItem += $item->price_total ?? 0;
+                                    $totalBuyItem += $item->price_total ?? 0;
 
-                                        $totalItem += $item->price_total_item ?? 0;
-                                        
-                                        $totalSellItem += $item->price_total_sell ?? 0;
-                                        $totalBuyRL += $item->price_buy_Rl ?? 0;
-                                        $totalSellRL += $item->price_sell_RL ?? 0;
-                                        $totalRL += $item->price_total_RL ?? 0;
-                                        $totalRemainingStock += $item->price_total_remaining_stock ?? 0;
-                                        
-                                    @endphp
-                                @endforeach
-                                <td  class="text-end">{{ number_format($totalBuyRL ?? 0, 0, '.', ',') }}</td>
-                                <td  class="text-end">{{ number_format($totalSellRL ?? 0, 0, '.', ',') }}</td>
-                                <td  class="text-end">{{ number_format($totalRL ?? 0, 0, '.', ',') }}</td>
-                                <td colspan="3" class="text-end">{{ number_format($totalRemainingStock ?? 0, 0, '.', ',') }}</td>
-                            </tr>
-                        </tfoot>
-                    @endif
-                </table>
-            </div>
+                                    $totalItem += $item->price_total_item ?? 0;
+                                    
+                                    $totalSellItem += $item->price_total_sell ?? 0;
+                                    $totalBuyRL += $item->price_buy_Rl ?? 0;
+                                    $totalSellRL += $item->price_sell_RL ?? 0;
+                                    $totalRL += $item->price_total_RL ?? 0;
+                                    $totalRemainingStock += $item->price_total_remaining_stock ?? 0;
+                                    
+                                @endphp
+                            @endforeach
+                            <td  class="text-end">{{ number_format($totalItem ?? 0, 0, '.', ',') }}</td>
+                            <td colspan="3" class="text-end">{{ number_format($totalSellItem ?? 0, 0, '.', ',') }}</td>
+                            <td colspan="2" class="text-end">{{ number_format($totalBuyRL ?? 0, 0, '.', ',') }}</td>
+                            <td  class="text-end">{{ number_format($totalSellRL ?? 0, 0, '.', ',') }}</td>
+                            <td  class="text-end">{{ number_format($totalRL ?? 0, 0, '.', ',') }}</td>
+                            <td colspan="3" class="text-end">{{ number_format($totalRemainingStock ?? 0, 0, '.', ',') }}</td>
+                        </tr>
+                    </tfoot>
+                @endif
+            </table>
         </div>
+    </div>
 
     {{-- @foreach (range(1, 12) as $month)
         <div class="mb-5">

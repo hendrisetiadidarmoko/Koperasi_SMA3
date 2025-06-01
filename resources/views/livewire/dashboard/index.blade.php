@@ -44,14 +44,14 @@
         <form wire:submit.prevent="getChart">
             <div class="row justify-content-end text-end mt-2">
                 <div class="col-xl-3 my-1">
-                    <select wire:model="selectedMonth" id="monthSelect" class="form-select">
+                    <select wire:model="selectedMonth" id="monthSelect" class="form-select form-control">
                         @foreach(range(1,12) as $month)
                             <option value="{{ $month }}">{{ \Carbon\Carbon::create()->month($month)->format('F') }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-xl-3 my-1">
-                    <select wire:model="selectedYear" id="yearSelect" class="form-select">
+                    <select wire:model="selectedYear" id="yearSelect" class="form-select form-control">
                         @foreach(range(now()->year - 5, now()->year) as $year)
                             <option value="{{ $year }}">{{ $year }}</option>
                         @endforeach
@@ -133,15 +133,6 @@
                 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
                 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
             ];
-
-            document.getElementById('monthSelect').addEventListener('change', function() {
-                const selectedValue = parseInt(this.value);
-                const monthName = monthNames[selectedValue - 1];
-                document.getElementById('monthThis').textContent = 'Bulan ' + monthName;
-                // Kalau ingin langsung minta update chart ke Livewire,
-                // bisa trigger method Livewire disini, contoh:
-                // Livewire.emit('monthChanged', selectedValue);
-            });
 
             Livewire.on('chartUpdated', (labels, data) => {
                     if (chartTopSelling) {
