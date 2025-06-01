@@ -13,6 +13,14 @@
                 <div class="col-12">
                     <div class="card border-0">
                         <div class="card-body">
+                            <div class="my-2">
+                                <form wire:submit.prevent="scan">
+                                    <div class="d-flex">
+                                        <input type="text" wire:model.lazy="barcode" class="form-control" autofocus autocomplete="off" placeholder="Input atau scan code"/>
+                                        <button type="submit" class="btn btn-primary ms-2">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
                             <div class="d-flex justify-content-end">
                                 <button type="button" class="btn btn-create mb-3" data-bs-toggle="modal" data-bs-target="#form-modal">
                                     Tambah Data
@@ -33,7 +41,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="{{ $modalId }}Label"> {{ $itemId ? 'Edit Barang' : 'Tambah Barang' }}</h1>
+                    <h1 class="modal-title fs-5" id="{{ $modalId }}Label"> {{ $itemId ? ' Penjualan Barang' : ' Penjualan Barang' }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal"></button>
                 </div>
                 <form wire:submit.prevent="save">
@@ -110,7 +118,9 @@
             const price = selectedOption.getAttribute("data-price");
             document.getElementById("harga").value = price || '';
         }
-        
+        function showScanner() {
+            document.getElementById("scanner-section").style.display = "block";
+        }
     </script>
     
 </div>

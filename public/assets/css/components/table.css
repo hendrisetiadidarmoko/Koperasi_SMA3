@@ -68,6 +68,21 @@ table.dataTable td{padding:15px 8px}
     box-shadow: none;
 }
 
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary:visited,
+.btn-primary:disabled {
+    background-color: #FFA500 !important;
+    color: #FFFFFF !important;
+    font-weight: 600;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
 .select2-container{
     width: 100% !important;
     font-size: 1rem;
@@ -90,4 +105,18 @@ table.dataTable td{padding:15px 8px}
 }
 .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
     background-color: #FFA500;
+}
+
+.active>.page-link, .page-link.active {
+    z-index: 3;
+    background-color: #FFA500 !important;
+    border-color: #FFA500 !important;
+}
+
+.page-link{
+    color: #FFA500;
+}
+
+.print{
+    font-size: small;
 }

@@ -13,7 +13,9 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.monthly.index');
+        return view('livewire.monthly.index')->layoutData([
+            'title' => 'Koprasi - SMA N 3 Purwokerto',
+        ]);
     }
 
     public function mount($year)

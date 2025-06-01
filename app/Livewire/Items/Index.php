@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Auth;
 class Index extends Component
 {
     public $modalId = 'items_modal';
-    public $name, $price, $price_buy;
+    public $name;
+    public $price;
+    public $price_buy;
+    public $barcode;
     public $itemId = null;
     
 
@@ -17,7 +20,7 @@ class Index extends Component
     {
         return view('livewire.items.index')
             ->layoutData([
-                'title' => 'Barang',
+                'title' => 'Koprasi - SMA N 3 Purwokerto',
             ]);
     }
 
@@ -42,7 +45,12 @@ class Index extends Component
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'price_buy' => 'required|numeric|min:0',
+            'barcode' => 'nullable|string|size:13|regex:/^\d{13}$/|unique:items,barcode,' . $this->itemId,
         ]);
+
+        if (empty($validated['barcode'])) {
+            $validated['barcode'] = $this->generateEAN13();
+        }
 
         if ($validated['price_buy'] >= $validated['price']) {
             Session()->flash('message', 'Barang pembelian harus lebih randah dari harga penjualan');
@@ -59,7 +67,7 @@ class Index extends Component
                 session()->flash('message', 'Barang berhasil diperbarui!');
             }
         } else {
-            $validated['user_id'] = Auth::id(); 
+            $validated['user_id'] = Auth::id();
             // Create a new Barang
             Item::create($validated);
             session()->flash('message', 'Barang berhasil ditambahkan!');
@@ -74,11 +82,12 @@ class Index extends Component
     {
         $item = Item::find($id);
         if ($item) {
-            $this->itemId = $item->id; 
-            $this->name = $item->name; 
-            $this->price =  $this->price = number_format($item->price, 0, ',', '.');
-            $this->price_buy =  $this->price_buy = number_format($item->price_buy, 0, ',', '.');
-            $this->dispatch('show-modal'); 
+            $this->itemId = $item->id;
+            $this->name = $item->name;
+            $this->price =   $item->price;
+            $this->price_buy =   $item->price_buy;
+            $this->barcode = $item ->barcode;
+            $this->dispatch('show-modal');
         }
     }
 
@@ -95,4 +104,15 @@ class Index extends Component
 
         $this->dispatch('re_render_table');
     }
+    public function generateEAN13()
+    {
+        $code = str_pad(mt_rand(100000000000, 999999999999), 12, '0', STR_PAD_LEFT);
+        $sum = 0;
+        for ($i = 0; $i < 12; $i++) {
+            $sum += (int)$code[$i] * ($i % 2 === 0 ? 1 : 3);
+        }
+        $checksum = (10 - ($sum % 10)) % 10;
+        return $code . $checksum;
+    }
+
 }

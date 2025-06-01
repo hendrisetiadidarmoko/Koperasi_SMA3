@@ -21,6 +21,8 @@ class Datatable extends DataTableComponent
     public $grandTotalLastMonth = 0;
     public $grandTotalRL = 0;
 
+    public $grandTotalLabaRugi = 0;
+
     public $year;
     public $month;
 
@@ -531,7 +533,7 @@ class Datatable extends DataTableComponent
                         return ($sell->count ?? 0) * ($sell->price ?? 0);
                     });
             
-                    $total = $totalPurchases - $totalSells;
+                    $total = $totalSells - $totalPurchases;
                     
                     $this -> grandTotalRL += $total;
                     
@@ -571,7 +573,7 @@ class Datatable extends DataTableComponent
                         }
                     }
 
-                    return number_format($lastStock, 0, '.', ',');
+                    return $lastStock;
                 }),
             Column::make('Harga Barang', 'price')
                 ->sortable()

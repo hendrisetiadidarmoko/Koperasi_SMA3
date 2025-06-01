@@ -60,7 +60,10 @@ Route::group(['middleware' => 'role:admin,pegawai'], function() {
 
     Route::get('/admin/transactions/{year}', App\Livewire\Monthly\Index::class)->name('admin.transaction.months');
 
-    Route::get('/report-pdf/{year}/{month}', App\Livewire\Pdf\Index::class)->name('report.pdf');
+    Route::get('/report-pdf/{year}/{month}', App\Livewire\MonthPdf\Index::class)->name('report.month.pdf');
 
     Route::get('/report-pdf/{year}', App\Livewire\YearPdf\Index::class)->name('report.year.pdf');
+        // routes/web.php
+    Route::post('/scan-store', [\App\Http\Controllers\ScanController::class, 'scan'])->name('scan.store');
+
 });

@@ -7,7 +7,7 @@
                         <span style="color: #FFA500;" class="fs-1">SMA N 3 Purwokerto</span>
                     </h2>
                     <p class="fw-semibold fs-4">Belanja Cerdas, Harga Bersahabat, Manfaat untuk Semua!</p>
-                    <a href="#" class="btn btn-custom">Selengkapnya</a>
+                    <a href="{{ route(name: 'listItem') }}" class="btn btn-custom">Lihat barang</a>
                 </div>
             </div>
             <div class="col-md-6 text-center order-1 order-md-2" data-aos="fade-left">

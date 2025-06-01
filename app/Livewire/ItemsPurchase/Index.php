@@ -27,7 +27,9 @@ class Index extends Component
     {
         return view('livewire.items-purchase.index', [
             'items' => $this->items,
-        ])->layoutData(['title' => 'Pembelian Barang']);
+        ])->layoutData([
+            'title' => 'Koprasi - SMA N 3 Purwokerto',
+        ]);
     }
 
     protected $listeners = [

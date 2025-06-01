@@ -37,7 +37,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="{{ $modalId }}Label"> {{ $itemId ? 'Edit Barang' : 'Tambah Barang' }}</h1>
+                    <h1 class="modal-title fs-5" id="{{ $modalId }}Label"> {{ $itemId ? ' Pembelian Barang' : ' Pembelian Barang' }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal"></button>
                 </div>
                 <form wire:submit.prevent="save">
@@ -89,11 +89,6 @@
             });
         });
 
-        document.addEventListener('livewire:load', function () {
-            Livewire.hook('message.processed', (message, component) => {
-                $('#item').val(@this.get('id_item')).trigger('change');
-            });
-        });
     
         document.addEventListener('DOMContentLoaded', function () {
             window.addEventListener('show-modal', event => {
@@ -116,7 +111,7 @@
             const select = document.getElementById("item");
             const selectedOption = select.options[select.selectedIndex];
             const price = selectedOption.getAttribute("data-price");
-            document.getElementById("harga").value = price || '';
+            document.getElementById("harga").value = price_buy || '';
         }
         
     </script>

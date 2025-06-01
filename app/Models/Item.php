@@ -11,7 +11,7 @@ class Item extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'price', 'price_buy', 'count','user_id'];
+    protected $fillable = ['name', 'price', 'price_buy', 'count','user_id','barcode'];
 
     public function itemPurchases(): HasMany
     {

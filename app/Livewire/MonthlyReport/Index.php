@@ -20,7 +20,9 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.monthly-report.index')->layoutData(['title' => 'Laporan Bulanan']);
+        return view('livewire.monthly-report.index')->layoutData([
+            'title' => 'Koprasi - SMA N 3 Purwokerto',
+        ]);
     }
     
 }

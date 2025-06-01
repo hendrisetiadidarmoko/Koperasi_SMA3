@@ -16,7 +16,7 @@ class Login extends Component
      * login
      *
      * @return void
-     * 
+     *
      */
 
 
@@ -25,7 +25,7 @@ class Login extends Component
         // Validasi input email dan password
         $this->validate([
             'email'    => 'required|email',
-            'password' => 'required'
+            'password' => 'required|min:8|max:20'
         ]);
 
         $throttleKey = strtolower($this->email) . '|' . request()->ip();
@@ -59,6 +59,8 @@ class Login extends Component
      */
     public function render()
     {
-        return view('livewire.auth.login')->layout('livewire.auth.app');
+        return view('livewire.auth.login')->layout('livewire.auth.app',[
+            'title' => 'Koprasi - SMA N 3 Purwokerto',
+        ]);
     }
 }

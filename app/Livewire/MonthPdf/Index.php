@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\YearPdf;
+namespace App\Livewire\MonthPdf;
 
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -27,15 +27,12 @@ class Index extends Component
 
     public $year, $month;
 
-    public function mount($year)
+    public function mount($year, $month)
     {
         $this->year = $year;
 
         $this->items = collect();
 
-        
-
-        for ($month = 1; $month <= 12; $month++) {
             $this->month = $month;
             $this->grandTotalSupply = 0;
             $this->grandTotalPurchase = 0;
@@ -97,12 +94,11 @@ class Index extends Component
     
             // Group the data by month
             $this->items[$month] = $monthlyData;
-        }
     }
 
     public function render()
     {
-        return view('livewire.pdf.year')->layout('livewire.pdf.app',[
+        return view('livewire.pdf.month')->layout('livewire.pdf.app',[
             'title' => 'Koprasi - SMA N 3 Purwokerto',
         ]);
     }

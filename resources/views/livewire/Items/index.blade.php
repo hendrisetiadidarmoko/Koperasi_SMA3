@@ -53,6 +53,11 @@
                             <label for="harga">Harga Pembelian Barang : </label>
                             <input type="number" wire:model="price_buy" class="form-control" id="harga" required min="0" step="0.01">
                             @error('price_buy') <span class="text-danger">{{ $message }}</span> @enderror
+
+                            <label for="barcode">Barcode (EAN-13, opsional):</label>
+                            <input type="text" wire:model="barcode" class="form-control" id="barcode" pattern="\d{13}" placeholder="Masukkan 13 digit atau kosongkan untuk acak">
+                            @error('barcode') <span class="text-danger">{{ $message }}</span> @enderror
+
                         </div>
                     </div>
                     <div class="modal-footer">

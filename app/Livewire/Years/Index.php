@@ -8,7 +8,9 @@ class Index extends Component
 {
     public function render()
     {
-        return view('livewire.years.index');
+        return view('livewire.years.index')->layoutData([
+            'title' => 'Koprasi - SMA N 3 Purwokerto',
+        ]);
     }
 
     public $years;

@@ -8,6 +8,8 @@ class Index extends Component
 {
     public function render()
     {
-        return view('livewire.transaction.index');
+        return view('livewire.transaction.index')->layoutData([
+            'title' => 'Koprasi - SMA N 3 Purwokerto',
+        ]);
     }
 }

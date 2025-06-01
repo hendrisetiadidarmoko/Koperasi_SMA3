@@ -5,7 +5,7 @@ namespace App\Livewire\Items;
 use App\Models\Item;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-
+use Milon\Barcode\Facades\DNS1DFacade as DNS1D;
 class Datatable extends DataTableComponent
 {
     protected $model = Item::class;
@@ -42,6 +42,15 @@ class Datatable extends DataTableComponent
             Column::make('Nama', 'name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Barcode', 'barcode')
+                ->format(function ($value) {
+                    return $value
+                        ? DNS1D::getBarcodeHTML($value, 'EAN13')
+                        : '<em>Tidak tersedia</em>';
+                })
+                ->html(),
+            Column::make('Nomer Barcode', 'barcode')
+                ->sortable(),
             Column::make('Harga Penjualan', 'price')
                 ->sortable()
                 ->format(function ($value) {

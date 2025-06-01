@@ -19,6 +19,8 @@ class Index extends Component
     {
         return view('livewire.users.index', [
             
+        ])->layoutData([
+            'title' => 'Koprasi - SMA N 3 Purwokerto',
         ]);
     }
 

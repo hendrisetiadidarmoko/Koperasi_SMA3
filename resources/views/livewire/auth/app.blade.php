@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+        <link rel="icon" href="{{ asset('assets/images/logos.png') }}" type="image/png">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -30,7 +30,7 @@
         </style>
     </head>
     <body>
-        <div id="app">
+        <div id="app" data-aos="zoom-in-down" data-aos-once="true">
             <div class="background-auth">
                 <div class="overlay">
                     {{ $slot }}

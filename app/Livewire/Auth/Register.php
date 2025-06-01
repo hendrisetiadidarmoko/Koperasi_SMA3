@@ -5,16 +5,18 @@ namespace App\Livewire\Auth;
 use Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Auth;
 class Register extends Component
 {
     public $name;
     public $email;
     public $password;
-    public $password_confirmation; 
+    public $password_confirmation;
     public function render()
     {
-        return view('livewire.auth.register')->layout('livewire.auth.app');
+        return view('livewire.auth.register')->layout('livewire.auth.app',[
+            'title' => 'Koprasi - SMA N 3 Purwokerto',
+        ]);
     }
 
     public function save()
@@ -32,13 +34,12 @@ class Register extends Component
         $validated['password'] = Hash::make($validated['password']);
 
         // Membuat akun baru
-        User::create($validated);
+        $user = User::create($validated);
 
-        $this->reset();
-        session()->flash('message', 'Akun telah dibuat');
+        Auth::login($user);
         
 
-        return redirect()->route('auth.login');
+        return redirect()->route('admin.dashboard');
         
         
         

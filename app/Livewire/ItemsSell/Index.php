@@ -15,7 +15,7 @@ class Index extends Component
     public $itemId = null;
     public $items = [];
     public $count = 1, $id_item, $created_at;
-
+    public $barcode;
     public function mount() 
     {
         $this->items = Item::all(); 
@@ -26,7 +26,9 @@ class Index extends Component
     {
         return view('livewire.items-sell.index', [
             'items' => $this->items
-        ])->layoutData(['title' => 'Penjualan Barang']);
+        ])->layoutData([
+            'title' => 'Koprasi - SMA N 3 Purwokerto',
+        ]);
     }
 
     protected $listeners = [
@@ -65,7 +67,7 @@ class Index extends Component
         } else {
             // Create a new ItemPurchase
             if ($item->count < $this->count) {
-                session()->flash('message', 'Jumlah barang tidak mencukupi!');
+                session()->flash('message', sprintf('Jumlah barang tidak mencukupi, hanya tersisa %d!', $item->count));
                 $this->resetExcept('items');
                 $this->dispatch('re_render_table');
                 $this->closeModal();
@@ -125,5 +127,44 @@ class Index extends Component
         }
     }
 
+
+
+    public function scan()
+    {
+        $this->validate([
+            'barcode' => 'required|digits:13',
+        ]);
+
+
+        $item = Item::where('barcode', $this->barcode)->first();
+
+        if (!$item) {
+            session()->flash('error', 'Produk tidak ditemukan.');
+            return;
+        }
+
+        if ($item->count <= 0) {
+            session()->flash('error', 'Stok barang habis.');
+            return;
+        }
+
+        $data = [
+            'id_item' => $item->id,
+            'price' => $item->price,
+            'count' => 1,
+            'user_id' => Auth::id(),
+        ];
+
+        ItemSell::create($data);
+
+        $item->count -= 1;
+        $item->save();
+
+        session()->flash('message', 'Barang berhasil ditambahkan melalui scan.');
+
+        // Kosongkan input setelah submit
+        $this->reset('barcode');
+        $this->dispatch('re_render_table');
+    }
 }
 
