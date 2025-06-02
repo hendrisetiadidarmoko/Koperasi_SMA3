@@ -35,32 +35,45 @@ class Index extends Component
         $this->resetErrorBag();
         $this->dispatch('close-modal');
     }
-
     public function save()
     {
         $this->resetErrorBag();
 
-        // Validate the name field
         $validated = $this->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'price_buy' => 'required|numeric|min:0',
-            'barcode' => 'nullable|string|size:13|regex:/^\d{13}$/|unique:items,barcode,' . $this->itemId,
+            'barcode' => 'nullable|regex:/^\d{12}$/',
         ]);
 
+        // Buat atau lengkapi barcode 13 digit
         if (empty($validated['barcode'])) {
             $validated['barcode'] = $this->generateEAN13();
+        } else {
+            $validated['barcode'] = $this->completeEAN13($validated['barcode']);
         }
 
+        // Cek duplikat barcode
+        $exists = Item::where('barcode', $validated['barcode'])
+            ->when($this->itemId, fn($q) => $q->where('id', '!=', $this->itemId))
+            ->exists();
+
+        if ($exists) {
+            session()->flash('message', 'Barcode sudah digunakan!');
+            $this->dispatch('re_render_table');
+            return;
+        }
+
+        // Validasi harga beli lebih kecil dari harga jual
         if ($validated['price_buy'] >= $validated['price']) {
-            Session()->flash('message', 'Barang pembelian harus lebih randah dari harga penjualan');
+            session()->flash('message', 'Harga beli harus lebih rendah dari harga jual.');
             $this->dispatch('re_render_table');
             $this->closeModal();
             return;
         }
 
+        // Simpan data
         if ($this->itemId) {
-            // Update existing Barang
             $item = Item::find($this->itemId);
             if ($item) {
                 $item->update($validated);
@@ -68,7 +81,6 @@ class Index extends Component
             }
         } else {
             $validated['user_id'] = Auth::id();
-            // Create a new Barang
             Item::create($validated);
             session()->flash('message', 'Barang berhasil ditambahkan!');
         }
@@ -86,7 +98,7 @@ class Index extends Component
             $this->name = $item->name;
             $this->price =   $item->price;
             $this->price_buy =   $item->price_buy;
-            $this->barcode = $item ->barcode;
+            $this->barcode = substr($item->barcode, 0, 12);
             $this->dispatch('show-modal');
         }
     }
@@ -104,15 +116,26 @@ class Index extends Component
 
         $this->dispatch('re_render_table');
     }
-    public function generateEAN13()
+    private function generateEAN13()
     {
-        $code = str_pad(mt_rand(100000000000, 999999999999), 12, '0', STR_PAD_LEFT);
+        $code = '';
+        for ($i = 0; $i < 12; $i++) {
+            $code .= mt_rand(0, 9);
+        }
+        return $this->completeEAN13($code);
+    }
+
+    private function completeEAN13($code12)
+    {
         $sum = 0;
         for ($i = 0; $i < 12; $i++) {
-            $sum += (int)$code[$i] * ($i % 2 === 0 ? 1 : 3);
+            $digit = (int) $code12[$i];
+            $sum += $i % 2 === 0 ? $digit : $digit * 3;
         }
-        $checksum = (10 - ($sum % 10)) % 10;
-        return $code . $checksum;
+        $checkDigit = (10 - ($sum % 10)) % 10;
+        return $code12 . $checkDigit;
     }
+
+
 
 }

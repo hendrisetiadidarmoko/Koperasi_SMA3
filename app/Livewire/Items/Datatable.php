@@ -42,7 +42,7 @@ class Datatable extends DataTableComponent
             Column::make('Nama', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Barcode', 'barcode')
+            Column::make('Barcode')
                 ->format(function ($value) {
                     return $value
                         ? DNS1D::getBarcodeHTML($value, 'EAN13')

@@ -55,7 +55,7 @@
                             @error('price_buy') <span class="text-danger">{{ $message }}</span> @enderror
 
                             <label for="barcode">Barcode (EAN-13, opsional):</label>
-                            <input type="text" wire:model="barcode" class="form-control" id="barcode" pattern="\d{13}" placeholder="Masukkan 13 digit atau kosongkan untuk acak">
+                            <input type="number" wire:model="barcode" class="form-control" id="barcode" pattern="\d{13}" placeholder="Masukkan 13 digit atau kosongkan untuk acak">
                             @error('barcode') <span class="text-danger">{{ $message }}</span> @enderror
 
                         </div>
