@@ -139,12 +139,12 @@ class Index extends Component
         $item = Item::where('barcode', $this->barcode)->first();
 
         if (!$item) {
-            session()->flash('error', 'Produk tidak ditemukan.');
+            session()->flash('message', 'Barang tidak ditemukan.');
             return;
         }
 
         if ($item->count <= 0) {
-            session()->flash('error', 'Stok barang habis.');
+            session()->flash('message', 'Stok barang habis.');
             return;
         }
 

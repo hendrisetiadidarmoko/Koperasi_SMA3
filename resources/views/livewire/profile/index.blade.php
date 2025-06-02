@@ -1,4 +1,4 @@
-<div data-aos="fade-left">
+<div >
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="card w-100">
             <div class="card-header text-center fw-bold content-header fs-3">Profile</div>
@@ -31,7 +31,7 @@
                         <form wire:submit.prevent="updatePass">
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password Baru: </label>
-                                <input type="text" wire:model="password" class="form-control rounded-4" id="password" required>
+                                <input type="password" wire:model="password" class="form-control rounded-4" id="password" required>
                                 @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                             <div class="mb-3">

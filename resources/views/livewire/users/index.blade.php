@@ -1,5 +1,5 @@
 <div class="container" >
-    <div class="page-heading my-5" data-aos="fade-left">
+    <div class="page-heading my-5">
         <div class="page-title">
             <div class="row">
                 <div class="order-md-1 order-last">

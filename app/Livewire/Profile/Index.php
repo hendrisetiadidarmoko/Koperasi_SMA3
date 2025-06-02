@@ -5,6 +5,7 @@ namespace App\Livewire\Profile;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Hash;
 
 class Index extends Component
 {
